@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.WebUtilities;
 using System.Text.Json;
+using System.IO;
 
 namespace serverside.Controllers
 {
@@ -99,15 +98,12 @@ namespace serverside.Controllers
             }
         };
 
-        private const string _reportTables = "Report_Tables_View/FeatureServer";
-
-        private readonly IHttpClientFactory _clientFactory;
+        private readonly IQueryService _service;
 
         private readonly ILogger<HazardController> _logger;
 
-
-        public HazardController(IHttpClientFactory clientFactory, ILogger<HazardController> logger) {
-            _clientFactory = clientFactory;
+        public HazardController(IQueryService service, ILogger<HazardController> logger) {
+            _service = service;
             _logger = logger;
         }
 
@@ -116,33 +112,41 @@ namespace serverside.Controllers
             return "OK";
         }
 
-    [HttpPost]
-        public async Task<JsonResult> Post(string json) {
-            var client = _clientFactory.CreateClient("agol");
+        [HttpPost]
+        public async Task<JsonResult> Post() {
+            var areaOfInterest = string.Empty;
+            using (var reader = new StreamReader(Request.Body)) {
+                areaOfInterest = await reader.ReadToEndAsync();
+            }
 
-            var meta = _serviceUrls.First();
-            var queryParams = new Dictionary<string, string>() {
-                {"outFields", meta.Unit},
-                {"geometry", "{ \"rings\": [[[-12472025.223916203, 4967174.1688544145], [-12471929.677630847, 4967107.2864546655], [-12471920.123002311, 4966696.437427633], [-12472522.064600056, 4966744.210570311], [-12472464.736828843, 4967279.269768307], [-12472025.223916203, 4967174.1688544145]]] }"},
-                {"geometryType", "esriGeometryPolygon"},
-                {"inSR", "3857"},
-                {"returnGeometry", "false"},
-                {"returnCentroid", "false"},
-                {"spatialRel", "esriSpatialRelIntersects"},
-                {"f", "json"}
-            };
-            var url = QueryHelpers.AddQueryString(meta.Url, queryParams);
+            if (string.IsNullOrEmpty(areaOfInterest)) {
+                return new JsonResult("empty geometry") {
+                    StatusCode = 400
+                };
+            }
 
-            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            var queryTasks = _serviceUrls.Select(meta => _service.QueryUnitsAsync(meta, areaOfInterest)).ToArray();
+            var queries = await Task.WhenAll(queryTasks);
 
-            var response = await client.SendAsync(request);
+            var hazardUnits = queries.Where(value => value.Text.Count() > 0);
 
-            response.EnsureSuccessStatusCode();
+            var reportInfo = _service.QueryHazardTableAsync(queries);
+            var referenceInfo = _service.QueryHazardReferencesAsync(queries);
+            var introInfo = _service.QueryIntroTextAsync(queries);
 
-            var result = await response.Content.ReadAsStreamAsync();
-            var obj = await JsonSerializer.DeserializeAsync<QueryResponse>(result);
+            var hazards = await Task.WhenAll(reportInfo);
+            var references = await Task.WhenAll(referenceInfo);
+            var introText = await Task.WhenAll(introInfo);
 
-            return new JsonResult(obj.features.FirstOrDefault().attributes[meta.Unit]);
+            return new JsonResult(new {
+                introText,
+                hazards,
+                references
+            }, new JsonSerializerOptions {
+                IgnoreNullValues = true,
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
         }
     }
 }
