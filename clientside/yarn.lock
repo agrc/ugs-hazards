@@ -3940,6 +3940,11 @@ esrecurse@^4.1.0:
   dependencies:
     estraverse "^4.1.0"
 
+esri-loader@2.10.1:
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/esri-loader/-/esri-loader-2.10.1.tgz#d451bad53d916a973ec8879374287b34a3c54943"
+  integrity sha512-fxb/OLh3LTaO7zM1iMDr9x0YOmWiZEsA0PZQj2z8p6RgJJRqvqdIpuyLl+n6LDFJxeY68d8IVwI7p67pbH5B6Q==
+
 estraverse@^4.0.0, estraverse@^4.1.0, estraverse@^4.1.1, estraverse@^4.2.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-4.3.0.tgz#398ad3f3c5a24948be7725e83d11a7de28cdbd1d"

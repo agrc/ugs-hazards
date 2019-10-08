@@ -35,6 +35,13 @@ export default {
     ['Utah_Earthquake_Hazards/FeatureServer/3', 'LQS'],
     ['Utah_Earthquake_Hazards/FeatureServer/4', 'SFR'],
   ],
+  webMaps: {
+    WSS: '66ed4560f884405da440bcfccb56d16d',
+    CRS: '31431d9383d14f40acd8d2b0806ad999',
+
+    // the map below should really be `SBP` but I've temporarily changed it for testing
+    CSS: '6c80ce1f051947b3b14d65bf55aa81fd'
+  },
   fieldNames: {
     // common
     HazardUnit: 'HazardUnit',

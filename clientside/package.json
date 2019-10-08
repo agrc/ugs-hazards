@@ -4,6 +4,7 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
+    "esri-loader": "2.10.1",
     "node-sass": "4.12.0",
     "query-string": "6.8.3",
     "react": "^16.10.2",

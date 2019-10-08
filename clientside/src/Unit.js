@@ -6,7 +6,6 @@ import './Unit.scss';
 export default props => {
   return (
     <div className="unit">
-      {'<map>'}
       <p>{props[config.fieldNames.Description]}</p>
       <h3>Explanation of Map Units</h3>
       ?? - some sort of legend symbol??

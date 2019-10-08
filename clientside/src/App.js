@@ -4,6 +4,7 @@ import { stringify } from 'query-string';
 import stringifyObject from 'stringify-object';
 import config from './config';
 import Hazard from './Hazard';
+import AoiContext from './AoiContext';
 
 
 const defaultParameters = {
@@ -45,10 +46,12 @@ export default props => {
 
   return (
     <div className="app">
-      <h1>Input polygon</h1>
-      <p className="code">{stringifyObject(props.aoi, stringifyParams)}</p>
-      <h1>Hazards Found</h1>
-      { hazards.map(([units, code]) => <Hazard key={code} units={units} code={code} />) }
+      <AoiContext.Provider value={props.aoi}>
+        <h1>Input polygon</h1>
+        <p className="code">{stringifyObject(props.aoi, stringifyParams)}</p>
+        <h1>Hazards Found</h1>
+        { hazards.map(([units, code]) => <Hazard key={code} units={units} code={code} />) }
+      </AoiContext.Provider>
     </div>
   );
 }
