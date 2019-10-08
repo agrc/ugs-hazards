@@ -2,7 +2,10 @@ const baseUrl = 'https://services.arcgis.com/ZzrwjTRez6FJiOq4/arcgis/rest/servic
 export default {
   urls: {
     baseUrl,
-    hazardGroupingsTable: `${baseUrl}/Report_Tables_View/FeatureServer/0`
+    hazardGroupingsTable: `${baseUrl}/Report_Tables_View/FeatureServer/0`,
+    hazardIntroTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/2`,
+    hazardReferenceTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/3`,
+    hazardUnitTextTable: `${baseUrl}/Report_tables_View/FeatureServer/4`
   },
   queries: [
     // ['Utah_Geologic_Hazards/FeatureServer/0', '???'], // flood canyon
@@ -31,5 +34,16 @@ export default {
     // ['Utah_Earthquake_Hazards/FeatureServer/2', '??'], // quaternary faults
     ['Utah_Earthquake_Hazards/FeatureServer/3', 'LQS'],
     ['Utah_Earthquake_Hazards/FeatureServer/4', 'SFR'],
-  ]
+  ],
+  fieldNames: {
+    // common
+    HazardUnit: 'HazardUnit',
+    HazardName: 'HazardName',
+    Hazard: 'Hazard',
+    Text: 'Text',
+
+    // HazardUnitTextTable
+    Description: 'Description',
+    HowToUse: 'HowToUse',
+  }
 };

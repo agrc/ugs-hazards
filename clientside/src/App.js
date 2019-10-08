@@ -3,6 +3,7 @@ import './App.scss';
 import { stringify } from 'query-string';
 import stringifyObject from 'stringify-object';
 import config from './config';
+import Hazard from './Hazard';
 
 
 const defaultParameters = {
@@ -16,7 +17,7 @@ const defaultParameters = {
 export default props => {
   console.log('App');
 
-  const [ units, setUnits ] = useState([]);
+  const [ hazards, setHazards ] = useState([]);
   const makeRequest = async ([featureService, hazardCode]) => {
     const parameters = {
       geometry: JSON.stringify(props.aoi),
@@ -27,16 +28,16 @@ export default props => {
     const response = await fetch(`${config.urls.baseUrl}/${featureService}/query?${stringify(parameters)}`);
     const responseJson = await response.json();
 
-    return [responseJson.features, hazardCode];
+    return [responseJson.features.map(feature => feature.attributes), hazardCode];
   };
 
   const getData = async (aoi) => {
-    const newUnits = await Promise.all(config.queries.map(makeRequest));
+    const newHazards = await Promise.all(config.queries.map(makeRequest));
 
-    setUnits(newUnits);
+    setHazards(newHazards.filter(([features]) => features.length > 0));
   };
 
-  if (units.length === 0) {
+  if (hazards.length === 0) {
     getData(props.aoi);
   }
 
@@ -44,17 +45,10 @@ export default props => {
 
   return (
     <div className="app">
-      <h3>Input polygon</h3>
+      <h1>Input polygon</h1>
       <p className="code">{stringifyObject(props.aoi, stringifyParams)}</p>
-      <h3>Hazards Found</h3>
-      <div className="code">
-        { units.map(([features, hazardCode]) =>
-          <div key={hazardCode}>
-            <h4>{hazardCode}</h4>
-            <p>{stringifyObject(features, stringifyParams)}</p>
-          </div>)
-        }
-      </div>
+      <h1>Hazards Found</h1>
+      { hazards.map(([units, code]) => <Hazard key={code} units={units} code={code} />) }
     </div>
   );
 }
