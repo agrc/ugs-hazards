@@ -20,7 +20,7 @@ export default ({ units, code }) => {
 
     const parameters = {
       ...defaultParameters,
-      where: `${config.fieldNames.HazardUnit} IN ('${unitCodes.join('), (')}')`
+      where: `${config.fieldNames.HazardUnit} IN ('${unitCodes.join(', ')}')`
     };
 
     const response = await fetch(`${config.urls.hazardUnitTextTable}/query?${stringify(parameters)}`);
