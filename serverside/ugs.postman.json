@@ -1,0 +1,30 @@
+{
+	"variables": [],
+	"info": {
+		"name": "ugs",
+		"_postman_id": "b7132e11-0699-e539-ab75-b1591d72ac67",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ugs hazard map serverside query",
+			"request": {
+				"url": "https://localhost:5001/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "text/plain",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"rings\": [[[-12472025.223916203, 4967174.1688544145], [-12471929.677630847, 4967107.2864546655], [-12471920.123002311, 4966696.437427633], [-12472522.064600056, 4966744.210570311], [-12472464.736828843, 4967279.269768307], [-12472025.223916203, 4967174.1688544145]]]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
