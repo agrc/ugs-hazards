@@ -32,14 +32,14 @@ export default props => {
     return [responseJson.features.map(feature => feature.attributes), hazardCode];
   };
 
-  const getData = async (aoi) => {
+  const getData = async () => {
     const newHazards = await Promise.all(config.queries.map(makeRequest));
 
     setHazards(newHazards.filter(([features]) => features.length > 0));
   };
 
   if (hazards.length === 0) {
-    getData(props.aoi);
+    getData();
   }
 
   const stringifyParams = { indent: '  ' };
