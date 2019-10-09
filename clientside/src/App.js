@@ -42,13 +42,11 @@ export default props => {
     getData();
   }
 
-  const stringifyParams = { indent: '  ' };
-
   return (
     <div className="app">
       <AoiContext.Provider value={props.aoi}>
         <h1>Input polygon</h1>
-        <p className="code">{stringifyObject(props.aoi, stringifyParams)}</p>
+        <p className="code">{JSON.stringify(props.aoi, null, 1)}</p>
         <h1>Hazards Found</h1>
         { hazards.map(([units, code]) => <Hazard key={code} units={units} code={code} />) }
       </AoiContext.Provider>
