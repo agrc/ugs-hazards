@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './App.scss';
 import { stringify } from 'query-string';
-import stringifyObject from 'stringify-object';
 import config from './config';
 import Hazard from './Hazard';
 import AoiContext from './AoiContext';
@@ -22,7 +21,7 @@ export default props => {
   const makeRequest = async ([featureService, hazardCode]) => {
     const parameters = {
       geometry: JSON.stringify(props.aoi),
-      outFields: "*",
+      outFields: '*',
       ...defaultParameters
     };
 
