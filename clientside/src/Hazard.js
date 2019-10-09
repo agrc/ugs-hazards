@@ -147,6 +147,8 @@ export default (props) => {
 
       console.log('screenshot set')
 
+      view.container = view.map = null;
+      document.body.removeChild(mapDiv);
     }
 
     loadMap(config.webMaps.hazard);
