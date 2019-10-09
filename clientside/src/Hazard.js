@@ -89,35 +89,55 @@ export default ({ units, code }) => {
   useEffect(() => {
     const loadMap = async id => {
       console.log('loadMap');
-      const requires = ['esri/WebMap', 'esri/views/MapView', 'esri/geometry/Polygon', 'esri/core/watchUtils'];
+      const requires = ['esri/WebMap',
+        'esri/views/MapView',
+        'esri/geometry/Polygon',
+        'esri/core/watchUtils',
+        'esri/Graphic'
+      ];
 
-      const [ WebMap, MapView, Polygon, watchUtils ] = await loadModules(requires, { css: true });
+      const [ WebMap, MapView, Polygon, watchUtils, Graphic ] = await loadModules(requires, { css: true });
 
       const mapDiv = document.createElement('div');
-      mapDiv.style = 'width: 900px; height: 350px;';
+      mapDiv.style = 'position: absolute;left: -5000px;width: 1000px;height: 500px';
       document.body.appendChild(mapDiv);
+
+      const polylineSymbol = {
+        type: 'simple-line',
+        color: [226, 119, 40],
+        width: 4
+      };
+
+      const polygon = new Polygon(aoi);
+
+      const polylineGraphic = new Graphic({
+        geometry: polygon,
+        symbol: polylineSymbol
+      });
+
       const map = new WebMap({
         portalItem: { id }
       });
+
       console.log('map', map);
       const view = new MapView({
         map,
         container: mapDiv,
         ui: {
-          // exclude zoom controls
           components: ['attribution']
         },
-        extent: new Polygon(aoi).extent
+        extent: polygon.extent.expand(3)
       });
-      console.log('view', view);
+
+      view.graphics.add(polylineGraphic);
 
       await view.when();
       await watchUtils.whenFalseOnce(view, 'updating');
 
-      console.log('when');
-      const screenshot = await view.takeScreenshot({ ignorePadding: false });
+      const screenshot = await view.takeScreenshot({width: 2000, height: 1000});
       setImageSrc(screenshot.dataUrl);
-      console.log('screenshot', screenshot);
+
+      console.log('screenshot set')
 
       // // disable navigation events - this is a little crazy
       // view.on('mouse-wheel', event => {
@@ -152,12 +172,12 @@ export default ({ units, code }) => {
     <div className="hazard">
       <h2>{attributedUnits && attributedUnits[0][config.fieldNames.HazardName]}</h2>
       <p>{hazardText && hazardText.intro}</p>
-      { imageSrc && <img src={imageSrc} alt="map" /> }
+      { imageSrc && <img src={imageSrc} alt="map" style={{width: '100%', minHeight: '200px'}} /> }
       { attributedUnits && attributedUnits.map((unit, index) =>
         <Unit key={index} {...unit} />
       )}
       <h3>References</h3>
-      { references && references.map((reference, index) => <p key={index}>{reference}</p>)}
+      {references && references.map((reference, index) => <p key={index} dangerouslySetInnerHTML={{ __html: reference }}></p>)}
     </div>
   );
 };
