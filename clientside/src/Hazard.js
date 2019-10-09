@@ -151,7 +151,7 @@ export default ({ units, code }) => {
     <div className="hazard">
       <h2>{attributedUnits && attributedUnits[0][config.fieldNames.HazardName]}</h2>
       <p>{hazardText && hazardText.intro}</p>
-      <img source={imageSrc} alt="map" />
+      { imageSrc && <img src={imageSrc} alt="map" /> }
       { attributedUnits && attributedUnits.map((unit, index) =>
         <Unit key={index} {...unit} />
       )}
