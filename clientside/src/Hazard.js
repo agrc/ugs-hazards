@@ -89,9 +89,9 @@ export default ({ units, code }) => {
   useEffect(() => {
     const loadMap = async id => {
       console.log('loadMap');
-      const requires = ['esri/WebMap', 'esri/views/MapView', 'esri/geometry/Polygon'];
+      const requires = ['esri/WebMap', 'esri/views/MapView', 'esri/geometry/Polygon', 'esri/core/watchUtils'];
 
-      const [ WebMap, MapView, Polygon ] = await loadModules(requires, { css: true });
+      const [ WebMap, MapView, Polygon, watchUtils ] = await loadModules(requires, { css: true });
 
       const mapDiv = document.createElement('div');
       mapDiv.style = 'width: 900px; height: 350px;';
@@ -112,6 +112,7 @@ export default ({ units, code }) => {
       console.log('view', view);
 
       await view.when();
+      await watchUtils.whenFalseOnce(view, 'updating');
 
       console.log('when');
       const screenshot = await view.takeScreenshot({ ignorePadding: false });
