@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { stringify } from 'query-string';
 import config from './config';
 import Unit from './Unit';
@@ -16,6 +16,7 @@ export default ({ units, code }) => {
 
   const [ attributedUnits, setAttributedUnits ] = useState();
   const [ hazardText, setHazardText ] = useState();
+  const [ imageSrc, setImageSrc ] = useState();
 
   const getUnitAttribute = async units => {
     const unitCodes = units.map(unit => unit[`${code}HazardUnit`]);
@@ -84,65 +85,73 @@ export default ({ units, code }) => {
     getReferences(code);
   }
 
-  const mapDivRef = useRef();
-
   const aoi = useContext(AoiContext);
   useEffect(() => {
     const loadMap = async id => {
+      console.log('loadMap');
       const requires = ['esri/WebMap', 'esri/views/MapView', 'esri/geometry/Polygon'];
 
       const [ WebMap, MapView, Polygon ] = await loadModules(requires, { css: true });
 
+      const mapDiv = document.createElement('div');
+      mapDiv.style = 'width: 900px; height: 350px;';
+      document.body.appendChild(mapDiv);
       const map = new WebMap({
         portalItem: { id }
       });
-      console.log('aoi', aoi);
+      console.log('map', map);
       const view = new MapView({
         map,
-        container: mapDivRef.current,
+        container: mapDiv,
         ui: {
           // exclude zoom controls
           components: ['attribution']
         },
         extent: new Polygon(aoi).extent
       });
+      console.log('view', view);
 
       await view.when();
 
-      // disable navigation events - this is a little crazy
-      view.on('mouse-wheel', event => {
-        event.stopPropagation();
-      });
-      view.on('double-click', event => {
-        event.stopPropagation();
-      });
-      view.on('double-click', ['Control'], event => {
-        event.stopPropagation();
-      });
-      view.on('drag', event => {
-        event.stopPropagation();
-      });
-      view.on('drag', ['Shift'], event => {
-        event.stopPropagation();
-      });
-      view.on('drag', ['Shift', 'Control'], event => {
-        event.stopPropagation();
-      });
-      view.on('click', event => {
-        event.stopPropagation();
-      });
+      console.log('when');
+      const screenshot = await view.takeScreenshot({ ignorePadding: false });
+      setImageSrc(screenshot.dataUrl);
+      console.log('screenshot', screenshot);
+
+      // // disable navigation events - this is a little crazy
+      // view.on('mouse-wheel', event => {
+      //   event.stopPropagation();
+      // });
+      // view.on('double-click', event => {
+      //   event.stopPropagation();
+      // });
+      // view.on('double-click', ['Control'], event => {
+      //   event.stopPropagation();
+      // });
+      // view.on('drag', event => {
+      //   event.stopPropagation();
+      // });
+      // view.on('drag', ['Shift'], event => {
+      //   event.stopPropagation();
+      // });
+      // view.on('drag', ['Shift', 'Control'], event => {
+      //   event.stopPropagation();
+      // });
+      // view.on('click', event => {
+      //   event.stopPropagation();
+      // });
     }
 
     if (config.webMaps[code]) {
       loadMap(config.webMaps[code]);
     }
-  }, [mapDivRef, code, aoi]);
+  }, [code, aoi]);
 
   return (
     <div className="hazard">
       <h2>{attributedUnits && attributedUnits[0][config.fieldNames.HazardName]}</h2>
       <p>{hazardText && hazardText.intro}</p>
-      <div ref={mapDivRef}></div>
+      <img source={imageSrc} alt="map" />
       { attributedUnits && attributedUnits.map((unit, index) =>
         <Unit key={index} {...unit} />
       )}

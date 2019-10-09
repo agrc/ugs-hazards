@@ -40,7 +40,7 @@ export default {
     CRS: '31431d9383d14f40acd8d2b0806ad999',
 
     // the map below should really be `SBP` but I've temporarily changed it for testing
-    CSS: '6c80ce1f051947b3b14d65bf55aa81fd'
+    CSS: '895afaac7ee04933b91ee9dd1f88c823'
   },
   fieldNames: {
     // common
