@@ -11,8 +11,13 @@ const defaultParameters = {
   outFields: '*',
   f: 'json'
 };
-export default ({ units, code }) => {
-  console.log('Hazard', code, units);
+
+export default (props) => {
+  const code = props.hazardCode;
+  const units = props.features;
+  const url = props.url;
+
+  console.log('Hazard', code, units, url);
 
   const [ attributedUnits, setAttributedUnits ] = useState();
   const [ hazardText, setHazardText ] = useState();
@@ -131,6 +136,9 @@ export default ({ units, code }) => {
 
       view.graphics.add(polylineGraphic);
 
+      await map.when();
+      map.layers.forEach(layer => layer.visible = new RegExp(`${url}$`).test(`${layer.url}/${layer.layerId}`));
+
       await view.when();
       await watchUtils.whenFalseOnce(view, 'updating');
 
@@ -139,34 +147,10 @@ export default ({ units, code }) => {
 
       console.log('screenshot set')
 
-      // // disable navigation events - this is a little crazy
-      // view.on('mouse-wheel', event => {
-      //   event.stopPropagation();
-      // });
-      // view.on('double-click', event => {
-      //   event.stopPropagation();
-      // });
-      // view.on('double-click', ['Control'], event => {
-      //   event.stopPropagation();
-      // });
-      // view.on('drag', event => {
-      //   event.stopPropagation();
-      // });
-      // view.on('drag', ['Shift'], event => {
-      //   event.stopPropagation();
-      // });
-      // view.on('drag', ['Shift', 'Control'], event => {
-      //   event.stopPropagation();
-      // });
-      // view.on('click', event => {
-      //   event.stopPropagation();
-      // });
     }
 
-    if (config.webMaps[code]) {
-      loadMap(config.webMaps[code]);
-    }
-  }, [code, aoi]);
+    loadMap(config.webMaps.hazard);
+  }, [url, aoi]);
 
   return (
     <div className="hazard">

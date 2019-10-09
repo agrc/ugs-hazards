@@ -29,13 +29,17 @@ export default props => {
     const response = await fetch(`${config.urls.baseUrl}/${featureService}/query?${stringify(parameters)}`);
     const responseJson = await response.json();
 
-    return [responseJson.features.map(feature => feature.attributes), hazardCode];
+    return {
+      features: responseJson.features.map(feature => feature.attributes),
+      hazardCode,
+      url: featureService
+    };
   };
 
   const getData = async () => {
     const newHazards = await Promise.all(config.queries.map(makeRequest));
 
-    setHazards(newHazards.filter(([features]) => features.length > 0));
+    setHazards(newHazards.filter(({features}) => features.length > 0));
   };
 
   if (hazards.length === 0) {
@@ -48,7 +52,7 @@ export default props => {
         <h1>Input polygon</h1>
         <p className="code">{JSON.stringify(props.aoi, null, 1)}</p>
         <h1>Hazards Found</h1>
-        { hazards.map(([units, code]) => <Hazard key={code} units={units} code={code} />) }
+        { hazards.map((hazard, index) => <Hazard key={index} {...hazard} />) }
       </AoiContext.Provider>
     </div>
   );
