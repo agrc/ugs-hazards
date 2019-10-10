@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { loadModules } from 'esri-loader';
 import config from './config';
 import AoiContext from './AoiContext';
 import Hazard from './Hazard';
+import getModules from './esriModules';
 
 
 // we tried moving these to useRef but the code silently failed at map.current.when()
@@ -20,14 +20,7 @@ export default props => {
 
     setMapLoading(true);
 
-    const requires = [
-      'esri/WebMap',
-      'esri/views/MapView',
-      'esri/geometry/Polygon',
-      'esri/Graphic'
-    ];
-
-    const [ WebMap, MapView, Polygon, Graphic ] = await loadModules(requires, { css: true });
+    const { WebMap, MapView, Polygon, Graphic } = await getModules();
 
     const mapDiv = document.createElement('div');
     mapDiv.style = 'position: absolute; left: -5000px; width: 1000px; height: 500px';
@@ -100,7 +93,7 @@ const getScreenshot = async function(url) {
   map.layers.forEach(layer => layer.visible = new RegExp(`${url}$`).test(`${layer.url}/${layer.layerId}`));
 
   await view.when();
-  const [ watchUtils ] = await loadModules(['esri/core/watchUtils']);
+  const { watchUtils } = await getModules();
   await watchUtils.whenFalseOnce(view, 'updating');
 
   const screenshot = await view.takeScreenshot({width: 2000, height: 1000});
