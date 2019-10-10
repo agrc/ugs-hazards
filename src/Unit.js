@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import config from './config';
 import getModules from './esriModules';
 import './Unit.scss';
 
 
 export default props => {
-  const [legendHtml, setLegendHtml] = useState(null);
+  const [hasLegend, setHasLegend] = useState(false);
+  const legend = useRef(null);
 
   useEffect(() => {
     const buildLegend = async renderer => {
@@ -20,23 +21,23 @@ export default props => {
         return;
       }
 
-      const symbol = renderers[0].symbol;
+      const symbol = renderers[0].symbol.clone();
 
-      const element = await symbolUtils.renderPreviewHTML(symbol);
+      await symbolUtils.renderPreviewHTML(symbol, {
+        node: legend.current
+      });
 
-      setLegendHtml(element);
+      setHasLegend(true);
     };
 
-    if (!legendHtml && props.renderer) {
+    if (!hasLegend && props.renderer) {
       buildLegend(props.renderer);
     }
-  }, [legendHtml, props.renderer, props.unitCode]);
+  }, [hasLegend, props.renderer, props.unitCode]);
 
   return (
     <div className="unit">
-      {legendHtml ?
-        <span dangerouslySetInnerHTML={{ __html: legendHtml.outerHTML }}></span>
-      : null}
+      <span ref={legend} className="unit__legend"></span>
       <p dangerouslySetInnerHTML={{ __html: props[config.fieldNames.Description] }}></p>
       <h3>How to Use This Map</h3>
       <p dangerouslySetInnerHTML={{ __html: props[config.fieldNames.HowToUse] }}></p>
