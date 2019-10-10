@@ -93,16 +93,21 @@ const getScreenshot = async function(url) {
   let renderer;
 
   await map.when();
-  map.layers.forEach(layer => {
+
+  for (let index = 0; index < map.layers.length; index++) {
+    const layer = map.layers.getItemAt(index);
     layer.visible = new RegExp(`${url}$`).test(`${layer.url}/${layer.layerId}`);
 
     if (layer.visible) {
+      await layer.load();
+
       renderer = layer.renderer;
     };
-  });
+  }
 
   await view.when();
   const { watchUtils } = await getModules();
+
   await watchUtils.whenFalseOnce(view, 'updating');
 
   const screenshot = await view.takeScreenshot({width: 2000, height: 1000});
