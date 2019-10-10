@@ -90,7 +90,7 @@ export default (props) => {
   return (
     <div className="hazard">
       <h2>{attributedUnits && attributedUnits[0][config.fieldNames.HazardName]}</h2>
-      <p>{hazardText && hazardText.intro}</p>
+      { hazardText && <p dangerouslySetInnerHTML={{ __html: hazardText.intro}}></p> }
       { props.imageSrc && <img src={props.imageSrc} alt="map" style={{width: '100%', minHeight: '200px'}} /> }
       <h3>Explanation of Map Units</h3>
       { attributedUnits && attributedUnits.map((unit, index) =>
