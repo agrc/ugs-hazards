@@ -50,7 +50,6 @@ export default props => {
       <AoiContext.Provider value={props.aoi}>
         <h1>Input polygon</h1>
         <p className="code">{JSON.stringify(props.aoi, null, 1)}</p>
-        <h1>Hazards Found</h1>
         <HazardMap hazards={hazards}></HazardMap>
       </AoiContext.Provider>
     </div>
