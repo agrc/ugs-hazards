@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import './App.scss';
 import { stringify } from 'query-string';
 import config from './config';
-import Hazard from './Hazard';
 import AoiContext from './AoiContext';
+import HazardMap from './HazardMap';
 
 
 const defaultParameters = {
@@ -51,7 +51,7 @@ export default props => {
         <h1>Input polygon</h1>
         <p className="code">{JSON.stringify(props.aoi, null, 1)}</p>
         <h1>Hazards Found</h1>
-        { hazards.map((hazard, index) => <Hazard key={index} {...hazard} />) }
+        <HazardMap hazards={hazards}></HazardMap>
       </AoiContext.Provider>
     </div>
   );
