@@ -7,7 +7,8 @@ export default async () => {
     'esri/views/MapView',
     'esri/geometry/Polygon',
     'esri/Graphic',
-    'esri/core/watchUtils'
+    'esri/core/watchUtils',
+    'esri/symbols/support/symbolUtils'
   ];
 
   const [
@@ -15,10 +16,11 @@ export default async () => {
     MapView,
     Polygon,
     Graphic,
-    watchUtils
+    watchUtils,
+    symbolUtils
   ] = await loadModules(requires, { css: true });
 
   return {
-    WebMap, MapView, Polygon, Graphic, watchUtils
+    WebMap, MapView, Polygon, Graphic, watchUtils, symbolUtils
   };
 };

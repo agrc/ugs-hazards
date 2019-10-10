@@ -38,8 +38,9 @@ export default (props) => {
 
     const newAttributedUnits = Array.from(units).map(unit => {
       return {
-        ...unit,
-        ...unitLookup[unit[`${code}${config.fieldNames.HazardUnit}`]]
+        ...unit,  // feature service attributes
+        ...unitLookup[unit[`${code}${config.fieldNames.HazardUnit}`]],  // hazard text
+        unitCode: unit[`${code}${config.fieldNames.HazardUnit}`]
       };
     });
 
@@ -91,10 +92,10 @@ export default (props) => {
     <div className="hazard">
       <h2>{attributedUnits && attributedUnits[0][config.fieldNames.HazardName]}</h2>
       { hazardText && <p dangerouslySetInnerHTML={{ __html: hazardText.intro}}></p> }
-      { props.imageSrc && <img src={props.imageSrc} alt="map" style={{width: '100%', minHeight: '200px'}} /> }
+      { props.mapImage && <img src={props.mapImage} alt="map" style={{width: '100%', minHeight: '200px'}} /> }
       <h3>Explanation of Map Units</h3>
       { attributedUnits && attributedUnits.map((unit, index) =>
-        <Unit key={index} {...unit} />
+        <Unit key={index} {...unit} renderer={props.renderer} />
         )}
       <h3>References</h3>
       {references && references.map((reference, index) => <p key={index} dangerouslySetInnerHTML={{ __html: reference }}></p>)}

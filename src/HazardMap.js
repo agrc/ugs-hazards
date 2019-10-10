@@ -11,7 +11,7 @@ let view;
 export default props => {
   const [ mapLoading, setMapLoading ] = useState(false);
   const [ mapLoaded, setMapLoaded ] = useState(false);
-  const [ screenshots, setScreenshots ] = useState([]);
+  const [ visualAssets, setVisualAssets ] = useState([]);
 
   const aoi = useContext(AoiContext);
 
@@ -63,11 +63,12 @@ export default props => {
       const newScreenshots = [];
       for (let index = 0; index < props.hazards.length; index++) {
         const hazard = props.hazards[index];
-        const screenshot = await getScreenshot(hazard.url);
-        newScreenshots.push(screenshot.dataUrl);
+        const { screenshot, renderer } = await getScreenshot(hazard.url);
+
+        newScreenshots.push({mapImage: screenshot.dataUrl, renderer});
       }
 
-      setScreenshots(newScreenshots);
+      setVisualAssets(newScreenshots);
     };
 
     if (mapLoaded && props.hazards.length > 0) {
@@ -81,7 +82,7 @@ export default props => {
 
   return (
     <>
-      { props.hazards.map((hazard, index) => <Hazard key={index} {...hazard} imageSrc={screenshots[index]} />) }
+      { props.hazards.map((hazard, index) => <Hazard key={index} {...hazard} {...visualAssets[index]} />) }
     </>
   );
 };
@@ -89,8 +90,16 @@ export default props => {
 const getScreenshot = async function(url) {
   console.log('HazardMap.getScreenshot');
 
+  let renderer;
+
   await map.when();
-  map.layers.forEach(layer => layer.visible = new RegExp(`${url}$`).test(`${layer.url}/${layer.layerId}`));
+  map.layers.forEach(layer => {
+    layer.visible = new RegExp(`${url}$`).test(`${layer.url}/${layer.layerId}`);
+
+    if (layer.visible) {
+      renderer = layer.renderer;
+    };
+  });
 
   await view.when();
   const { watchUtils } = await getModules();
@@ -98,5 +107,5 @@ const getScreenshot = async function(url) {
 
   const screenshot = await view.takeScreenshot({width: 2000, height: 1000});
 
-  return screenshot;
+  return {screenshot, renderer};
 };
