@@ -12,12 +12,11 @@ export default {
     reportTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/8`
   },
   queries: [
-    // ['Utah_Geologic_Hazards/FeatureServer/0', '???'], // flood canyon
+    ['Utah_Geologic_Hazards/FeatureServer/0', 'FCH'],
     ['Utah_Geologic_Hazards/FeatureServer/1', 'FLH'],
     ['Utah_Geologic_Hazards/FeatureServer/2', 'SGS'],
     ['Utah_Geologic_Hazards/FeatureServer/3', 'LSS'],
     // ['Utah_Geologic_Hazards/FeatureServer/4', '???'], // landslides
-    // ['Utah_Geologic_Hazards/FeatureServer/5', 'LSUnit'], // legacy landslide
     ['Utah_Geologic_Hazards/FeatureServer/6', 'CAS'],
     ['Utah_Geologic_Hazards/FeatureServer/7', 'CSS'],
     ['Utah_Geologic_Hazards/FeatureServer/8', 'CRS'],
