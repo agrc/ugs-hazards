@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './App.scss';
 import config from './config';
-import AoiContext from './AoiContext';
 import HazardMap from './reportParts/HazardMap';
 import Group from './reportParts/Group';
 import Hazard from './reportParts/Hazard';
@@ -16,24 +15,6 @@ import {
 } from './services/QueryService';
 import { getHazardCodeFromUnitCode } from './helpers';
 
-
-const defaultParameters = {
-  geometryType: 'esriGeometryPolygon',
-  returnGeometry: false,
-  returnCentroid: false,
-  spatialRel: 'esriSpatialRelIntersects',
-  f: 'json'
-};
-
-// return (
-//   <div className="app">
-//     <AoiContext.Provider value={props.aoi}>
-//       <h1>Input polygon</h1>
-//       <p className="code">{JSON.stringify(props.aoi, null, 1)}</p>
-//       <HazardMap hazards={hazards}></HazardMap>
-//     </AoiContext.Provider>
-//   </div>
-// );
 
 export default props => {
   const [groupToHazardMap, setGroupToHazardMap] = useState({});
