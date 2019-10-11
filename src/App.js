@@ -94,11 +94,11 @@ export default props => {
     {Object.keys(groupToHazardMap).map(groupName => (
       <Group name={groupName} text="TODO: Group Text">
         {hazardIntroText && hazardReferences && hazardToUnitMap && groupToHazardMap[groupName].map(hazardCode => {
-          const introText = hazardIntroText.filter(x => x.Hazard === hazardCode);
+          const introText = hazardIntroText.filter(x => x.Hazard === hazardCode)[0].Text;
           const references = hazardReferences.filter(x => x.Hazard === hazardCode);
               return (
                 <Hazard {...hazardToUnitMap[hazardCode]}>
-                  <IntroText text={introText.map(({ Text }) => Text).join()}></IntroText>
+                  <IntroText text={introText}></IntroText>
                   {/* <HazardMap>
                 <HazardUnit></HazardUnit>
               </HazardMap> */}
