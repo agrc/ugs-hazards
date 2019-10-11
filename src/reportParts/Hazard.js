@@ -1,12 +1,11 @@
 import React from 'react';
 
 export default props => {
-  console.log('Hazard.render');
+  console.log('Hazard.render', props);
 
   return (
     <>
-      <h3>Hazard Name</h3>
-      <h3>{props.HazardName}</h3>
+      <h3>{props.name}</h3>
       {props.children}
     </>
   );

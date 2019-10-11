@@ -66,7 +66,7 @@ export default props => {
         hazardToUnitMapBuilder[hazardCode] = [];
       }
 
-      hazardToUnitMapBuilder[hazardCode].push({ HazardName, HowToUse, Description });
+      hazardToUnitMapBuilder[hazardCode].push({ HazardName, HowToUse, Description, HazardUnit });
     });
 
     const groupToHazardMapBuilder = {}
@@ -96,9 +96,11 @@ export default props => {
         {hazardIntroText && hazardReferences && hazardToUnitMap && groupToHazardMap[groupName].map(hazardCode => {
           const introText = hazardIntroText.filter(x => x.Hazard === hazardCode)[0].Text;
           const references = hazardReferences.filter(x => x.Hazard === hazardCode);
+          const units = hazardToUnitMap[hazardCode];
               return (
-                <Hazard {...hazardToUnitMap[hazardCode]}>
+                <Hazard name={units[0].HazardName}>
                   <IntroText text={introText}></IntroText>
+                  { units.map(unit => <HazardUnit {...unit}/>) }
                   {/* <HazardMap>
                 <HazardUnit></HazardUnit>
               </HazardMap> */}
