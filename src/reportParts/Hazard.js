@@ -10,7 +10,7 @@ export default props => {
 
   return (
     <>
-      <h3>{props.name}</h3>
+      <h2>{props.name}</h2>
       <p dangerouslySetInnerHTML={{ __html: props.introText }} title='test title'></p>
       { visualAssets && <img src={visualAssets.mapImage}
         alt="map" style={{width: '100%', minHeight: '200px'}} /> }
