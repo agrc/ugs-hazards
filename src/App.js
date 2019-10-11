@@ -60,13 +60,13 @@ export default props => {
 
     const hazardToUnitMapBuilder = {};
     hazardUnitText.forEach(({ HazardUnit, HazardName, HowToUse, Description }) => {
-      HazardUnit = HazardUnit.slice(-3).toUpperCase();
+      const hazardCode = HazardUnit.slice(-3).toUpperCase();
 
-      if (!hazardToUnitMapBuilder[HazardUnit]) {
-        hazardToUnitMapBuilder[HazardUnit] = [];
+      if (!hazardToUnitMapBuilder[hazardCode]) {
+        hazardToUnitMapBuilder[hazardCode] = [];
       }
 
-      hazardToUnitMapBuilder[HazardUnit].push({ HazardName, HowToUse, Description });
+      hazardToUnitMapBuilder[hazardCode].push({ HazardName, HowToUse, Description });
     });
 
     const groupToHazardMapBuilder = {}
