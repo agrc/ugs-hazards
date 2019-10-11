@@ -11,7 +11,8 @@ import {
   queryHazardUnitTableAsync,
   queryReferenceTableAsync,
   queryIntroTextAsync,
-  queryGroupingAsync
+  queryGroupingAsync,
+  queryGroupTextAsync
 } from './services/QueryService';
 import { getHazardCodeFromUnitCode } from './helpers';
 
@@ -22,6 +23,7 @@ export default props => {
   const [hazardIntroText, setHazardIntroText] = useState();
   const [hazardReferences, setHazardReferences] = useState();
   const [queriesWithResults, setQueriesWithResults] = useState([]);
+  const [groupToTextMap, setGroupToTextMap] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -40,7 +42,11 @@ export default props => {
       const hazardIntroText = await queryIntroTextAsync(flatUnitCodes);
       const hazardUnitText = await queryHazardUnitTableAsync(flatUnitCodes);
       const hazardReferences = await queryReferenceTableAsync(flatUnitCodes);
-      // const groupText = await queryGroupTextAsync(flatGroups);
+      const flatGroups = groupings.map(({ HazardGroup }) => HazardGroup);
+      const groupText = await queryGroupTextAsync(flatGroups);
+
+      const groupToTextMapBuilder = {};
+      groupText.forEach(({ HazardGroup, Text }) => groupToTextMapBuilder[HazardGroup] = Text);
 
       const hazardToUnitMapBuilder = {};
       hazardUnitText.forEach(({ HazardUnit, HazardName, HowToUse, Description }) => {
@@ -54,8 +60,6 @@ export default props => {
       });
 
       const groupToHazardMapBuilder = {}
-
-      console.log('building grouping map');
       groupings.forEach(({ HazardCode, HazardGroup }) => {
         if (!groupToHazardMapBuilder[HazardGroup]) {
           groupToHazardMapBuilder[HazardGroup] = [];
@@ -68,6 +72,7 @@ export default props => {
       setGroupToHazardMap(groupToHazardMapBuilder);
       setHazardIntroText(hazardIntroText);
       setHazardReferences(hazardReferences);
+      setGroupToTextMap(groupToTextMapBuilder);
     };
 
     if (props.aoi) {
@@ -78,7 +83,7 @@ export default props => {
   return (<>
     <HazardMap aoi={props.aoi} queriesWithResults={queriesWithResults}>
      {Object.keys(groupToHazardMap).map(groupName => (
-        <Group key={groupName} name={groupName} text="TODO: Group Text">
+        <Group key={groupName} name={groupName} text={groupToTextMap[groupName]}>
           {hazardIntroText && hazardReferences && hazardToUnitMap && groupToHazardMap[groupName].map(hazardCode => {
             const introText = hazardIntroText.filter(x => x.Hazard === hazardCode)[0].Text;
             const references = hazardReferences.filter(x => x.Hazard === hazardCode);

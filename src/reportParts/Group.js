@@ -4,7 +4,7 @@ export default props => {
   return (
     <>
       <h1>{props.name}</h1>
-      <p>{props.text}</p>
+      <p dangerouslySetInnerHTML={{ __html: props.text}}></p>
       {props.children}
     </>
   );
