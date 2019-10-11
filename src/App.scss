@@ -5,3 +5,13 @@
     border-top: none;
   }
 }
+
+.print-button {
+  float: right;
+}
+
+@media print {
+  .hide-for-print {
+    display: none;
+  }
+}
