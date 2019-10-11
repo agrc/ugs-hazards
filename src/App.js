@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import './App.scss';
-import { stringify } from 'query-string';
 import config from './config';
 import AoiContext from './AoiContext';
 import HazardMap from './HazardMap';
+import Group from './reportParts/Group';
+import Hazard from './reportParts/Hazard';
+import HazardUnit from './reportParts/HazardUnit';
+import IntroText from './reportParts/IntroText';
+import References from './reportParts/References';
+import {
+  queryUnitsAsync,
+  queryHazardUnitTableAsync,
+  queryReferenceTableAsync,
+  queryIntroTextAsync,
+  queryGroupingAsync
+} from './services/QueryService';
 
 
 const defaultParameters = {
@@ -14,44 +25,89 @@ const defaultParameters = {
   f: 'json'
 };
 
+// return (
+//   <div className="app">
+//     <AoiContext.Provider value={props.aoi}>
+//       <h1>Input polygon</h1>
+//       <p className="code">{JSON.stringify(props.aoi, null, 1)}</p>
+//       <HazardMap hazards={hazards}></HazardMap>
+//     </AoiContext.Provider>
+//   </div>
+// );
+
 export default props => {
-  console.log('App');
-
-  const [ hazards, setHazards ] = useState([]);
-  const makeRequest = async ([featureService, hazardCode]) => {
-    const parameters = {
-      geometry: JSON.stringify(props.aoi),
-      outFields: '*',
-      ...defaultParameters
-    };
-
-    const response = await fetch(`${config.urls.baseUrl}/${featureService}/query?${stringify(parameters)}`);
-    const responseJson = await response.json();
-
-    return {
-      features: responseJson.features.map(feature => feature.attributes),
-      hazardCode,
-      url: featureService
-    };
-  };
+  const [groupToHazardMap, setGroupToHazardMap] = useState({});
+  const [hazardToUnitMap, setHazardToUnitMap] = useState({});
+  const [hazardIntroText, setHazardIntroText] = useState();
+  const [hazardReferences, setHazardReferences] = useState();
 
   const getData = async () => {
-    const newHazards = await Promise.all(config.queries.map(makeRequest));
+    console.log('App.getData');
+    const allHazardInfos = await Promise.all(config.queries.map(featureClassMap => {
+      return queryUnitsAsync(featureClassMap, props.aoi);
+    }));
 
-    setHazards(newHazards.filter(({features}) => features.length > 0));
+    console.log('queried all units');
+
+    const hazardInfos = allHazardInfos.filter(({ units }) => units.length > 0);
+    const flatUnitCodes = hazardInfos.reduce((previous, { units }) => previous.concat(units), []);
+
+    const groupings = await queryGroupingAsync(flatUnitCodes);
+    const hazardIntroText = await queryIntroTextAsync(flatUnitCodes);
+    const hazardUnitText = await queryHazardUnitTableAsync(flatUnitCodes);
+    const hazardReferences = await queryReferenceTableAsync(flatUnitCodes);
+    // const groupText = await queryGroupTextAsync(flatGroups);
+
+    const hazardToUnitMapBuilder = {};
+    hazardUnitText.forEach(({ HazardUnit, HazardName, HowToUse, Description }) => {
+      HazardUnit = HazardUnit.slice(-3).toUpperCase();
+
+      if (!hazardToUnitMapBuilder[HazardUnit]) {
+        hazardToUnitMapBuilder[HazardUnit] = [];
+      }
+
+      hazardToUnitMapBuilder[HazardUnit].push({ HazardName, HowToUse, Description });
+    });
+
+    const groupToHazardMapBuilder = {}
+
+    console.log('building grouping map');
+    groupings.forEach(({ HazardCode, HazardGroup }) => {
+      if (!groupToHazardMapBuilder[HazardGroup]) {
+        groupToHazardMapBuilder[HazardGroup] = [];
+      }
+
+      groupToHazardMapBuilder[HazardGroup].push(HazardCode);
+    });
+
+    setHazardToUnitMap(hazardToUnitMapBuilder);
+    setGroupToHazardMap(groupToHazardMapBuilder);
+    setHazardIntroText(hazardIntroText);
+    setHazardReferences(hazardReferences);
   };
 
-  if (hazards.length === 0) {
+  if (Object.keys(groupToHazardMap).length === 0) {
     getData();
   }
 
-  return (
-    <div className="app">
-      <AoiContext.Provider value={props.aoi}>
-        <h1>Input polygon</h1>
-        <p className="code">{JSON.stringify(props.aoi, null, 1)}</p>
-        <HazardMap hazards={hazards}></HazardMap>
-      </AoiContext.Provider>
-    </div>
+  return (<>
+    {Object.keys(groupToHazardMap).map(groupName => (
+      <Group name={groupName} text="TODO: Group Text">
+        {hazardIntroText && hazardReferences && hazardToUnitMap && groupToHazardMap[groupName].map(hazardCode => {
+          const introText = hazardIntroText.filter(x => x.Hazard === hazardCode);
+          const references = hazardReferences.filter(x => x.Hazard === hazardCode);
+              return (
+                <Hazard {...hazardToUnitMap[hazardCode]}>
+                  <IntroText text={introText.map(({ Text }) => Text).join()}></IntroText>
+                  {/* <HazardMap>
+                <HazardUnit></HazardUnit>
+              </HazardMap> */}
+                  <References references={references.map(({ Text }) => Text)}></References>
+                </Hazard>
+              )
+            })}
+      </Group>
+    ))}
+  </>
   );
-}
+};

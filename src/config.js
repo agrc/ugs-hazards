@@ -45,6 +45,9 @@ export default {
     Hazard: 'Hazard',
     Text: 'Text',
 
+    // grouping
+    HazardCode: 'HazardCode',
+
     // HazardUnitTextTable
     Description: 'Description',
     HowToUse: 'HowToUse',
