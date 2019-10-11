@@ -12,9 +12,11 @@ import {
   queryReferenceTableAsync,
   queryIntroTextAsync,
   queryGroupingAsync,
-  queryGroupTextAsync
+  queryGroupTextAsync,
+  queryReportTextTableAsync
 } from './services/QueryService';
 import { getHazardCodeFromUnitCode } from './helpers';
+import CoverPage from './reportParts/CoverPage';
 
 
 export default props => {
@@ -24,12 +26,13 @@ export default props => {
   const [hazardReferences, setHazardReferences] = useState();
   const [queriesWithResults, setQueriesWithResults] = useState([]);
   const [groupToTextMap, setGroupToTextMap] = useState([]);
+  const [reportTextMap, setReportTextMap] = useState({});
 
   useEffect(() => {
     const getData = async () => {
       console.log('App.getData');
       const allHazardInfos = await Promise.all(config.queries.map(featureClassMap => {
-        return queryUnitsAsync(featureClassMap, props.aoi);
+        return queryUnitsAsync(featureClassMap, props.polygon);
       }));
 
       console.log('queried all units');
@@ -39,12 +42,25 @@ export default props => {
       setQueriesWithResults(hazardInfos.map(info => [info.url, info.hazard]));
 
       // these queries can be done simultaneously
-      const [groupings, hazardIntroText, hazardUnitText, hazardReferences] = await Promise.all([
+      const [
+        groupings,
+        hazardIntroText,
+        hazardUnitText,
+        hazardReferences,
+        reportTextRows
+      ] = await Promise.all([
         queryGroupingAsync(flatUnitCodes),
         queryIntroTextAsync(flatUnitCodes),
         queryHazardUnitTableAsync(flatUnitCodes),
-        queryReferenceTableAsync(flatUnitCodes)
+        queryReferenceTableAsync(flatUnitCodes),
+        queryReportTextTableAsync()
       ]);
+
+      const reportTextMapBuilder = {};
+      reportTextRows.forEach(({ Section, Text }) => {
+        reportTextMapBuilder[Section] = Text;
+      });
+      setReportTextMap(reportTextMapBuilder);
 
       const flatGroups = groupings.map(({ HazardGroup }) => HazardGroup);
       const groupText = await queryGroupTextAsync(flatGroups);
@@ -79,14 +95,15 @@ export default props => {
       setGroupToTextMap(groupToTextMapBuilder);
     };
 
-    if (props.aoi) {
+    if (props.polygon) {
       getData();
     }
-  }, [props.aoi]);
+  }, [props.polygon]);
 
   return (<>
     <button className="hide-for-print print-button" onClick={window.print}>Print Report</button>
-    <HazardMap aoi={props.aoi} queriesWithResults={queriesWithResults}>
+    <CoverPage aoiDescription={props.description} {...reportTextMap} />
+    <HazardMap aoi={props.polygon} queriesWithResults={queriesWithResults}>
      {Object.keys(groupToHazardMap).map(groupName => (
         <Group key={groupName} name={groupName} text={groupToTextMap[groupName]}>
           {hazardIntroText && hazardReferences && hazardToUnitMap && groupToHazardMap[groupName].map(hazardCode => {
