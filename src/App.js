@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.scss';
 import config from './config';
 import HazardMap from './reportParts/HazardMap';
@@ -23,55 +23,57 @@ export default props => {
   const [hazardReferences, setHazardReferences] = useState();
   const [queriesWithResults, setQueriesWithResults] = useState([]);
 
-  const getData = async () => {
-    console.log('App.getData');
-    const allHazardInfos = await Promise.all(config.queries.map(featureClassMap => {
-      return queryUnitsAsync(featureClassMap, props.aoi);
-    }));
+  useEffect(() => {
+    const getData = async () => {
+      console.log('App.getData');
+      const allHazardInfos = await Promise.all(config.queries.map(featureClassMap => {
+        return queryUnitsAsync(featureClassMap, props.aoi);
+      }));
 
-    console.log('queried all units');
+      console.log('queried all units');
 
-    const hazardInfos = allHazardInfos.filter(({ units }) => units.length > 0);
-    const flatUnitCodes = hazardInfos.reduce((previous, { units }) => previous.concat(units), []);
-    setQueriesWithResults(hazardInfos.map(info => [info.url, info.hazard]));
+      const hazardInfos = allHazardInfos.filter(({ units }) => units.length > 0);
+      const flatUnitCodes = hazardInfos.reduce((previous, { units }) => previous.concat(units), []);
+      setQueriesWithResults(hazardInfos.map(info => [info.url, info.hazard]));
 
-    const groupings = await queryGroupingAsync(flatUnitCodes);
-    const hazardIntroText = await queryIntroTextAsync(flatUnitCodes);
-    const hazardUnitText = await queryHazardUnitTableAsync(flatUnitCodes);
-    const hazardReferences = await queryReferenceTableAsync(flatUnitCodes);
-    // const groupText = await queryGroupTextAsync(flatGroups);
+      const groupings = await queryGroupingAsync(flatUnitCodes);
+      const hazardIntroText = await queryIntroTextAsync(flatUnitCodes);
+      const hazardUnitText = await queryHazardUnitTableAsync(flatUnitCodes);
+      const hazardReferences = await queryReferenceTableAsync(flatUnitCodes);
+      // const groupText = await queryGroupTextAsync(flatGroups);
 
-    const hazardToUnitMapBuilder = {};
-    hazardUnitText.forEach(({ HazardUnit, HazardName, HowToUse, Description }) => {
-      const hazardCode = getHazardCodeFromUnitCode(HazardUnit);
+      const hazardToUnitMapBuilder = {};
+      hazardUnitText.forEach(({ HazardUnit, HazardName, HowToUse, Description }) => {
+        const hazardCode = getHazardCodeFromUnitCode(HazardUnit);
 
-      if (!hazardToUnitMapBuilder[hazardCode]) {
-        hazardToUnitMapBuilder[hazardCode] = [];
-      }
+        if (!hazardToUnitMapBuilder[hazardCode]) {
+          hazardToUnitMapBuilder[hazardCode] = [];
+        }
 
-      hazardToUnitMapBuilder[hazardCode].push({ HazardName, HowToUse, Description, HazardUnit });
-    });
+        hazardToUnitMapBuilder[hazardCode].push({ HazardName, HowToUse, Description, HazardUnit });
+      });
 
-    const groupToHazardMapBuilder = {}
+      const groupToHazardMapBuilder = {}
 
-    console.log('building grouping map');
-    groupings.forEach(({ HazardCode, HazardGroup }) => {
-      if (!groupToHazardMapBuilder[HazardGroup]) {
-        groupToHazardMapBuilder[HazardGroup] = [];
-      }
+      console.log('building grouping map');
+      groupings.forEach(({ HazardCode, HazardGroup }) => {
+        if (!groupToHazardMapBuilder[HazardGroup]) {
+          groupToHazardMapBuilder[HazardGroup] = [];
+        }
 
-      groupToHazardMapBuilder[HazardGroup].push(HazardCode);
-    });
+        groupToHazardMapBuilder[HazardGroup].push(HazardCode);
+      });
 
-    setHazardToUnitMap(hazardToUnitMapBuilder);
-    setGroupToHazardMap(groupToHazardMapBuilder);
-    setHazardIntroText(hazardIntroText);
-    setHazardReferences(hazardReferences);
-  };
+      setHazardToUnitMap(hazardToUnitMapBuilder);
+      setGroupToHazardMap(groupToHazardMapBuilder);
+      setHazardIntroText(hazardIntroText);
+      setHazardReferences(hazardReferences);
+    };
 
-  if (Object.keys(groupToHazardMap).length === 0) {
-    getData();
-  }
+    if (props.aoi) {
+      getData();
+    }
+  }, [props.aoi]);
 
   return (<>
     <HazardMap aoi={props.aoi} queriesWithResults={queriesWithResults}>
