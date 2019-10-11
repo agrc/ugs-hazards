@@ -85,6 +85,7 @@ export default props => {
   }, [props.aoi]);
 
   return (<>
+    <button className="hide-for-print print-button" onClick={window.print}>Print Report</button>
     <HazardMap aoi={props.aoi} queriesWithResults={queriesWithResults}>
      {Object.keys(groupToHazardMap).map(groupName => (
         <Group key={groupName} name={groupName} text={groupToTextMap[groupName]}>
@@ -103,6 +104,5 @@ export default props => {
         </Group>
       ))}
     </HazardMap>
-  </>
-  );
+  </>);
 };
