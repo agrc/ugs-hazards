@@ -6,9 +6,11 @@ export default props => {
   return (
     <>
       <h3>References</h3>
-      {props.references && props.references.map((reference, index) =>
+      {(props.references && props.references.length > 0) ? props.references.map((reference, index) =>
         <p key={index} dangerouslySetInnerHTML={{ __html: reference }}
-          title={config.notProd && 'HazardReferenceTextTable.Text'}></p>)}
+          title={config.notProd && 'HazardReferenceTextTable.Text'}></p>)
+          : <p>None</p>
+      }
     </>
   );
 };
