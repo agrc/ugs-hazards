@@ -163,3 +163,22 @@ export const queryReportTextTableAsync = async () => {
 
   return responseJson.features.map(feature => feature.attributes);
 };
+
+export const queryOtherDataTable = async () => {
+  console.log('QueryService.queryOtherDataTable');
+
+  const url = config.urls.otherDataTable;
+
+  const whereClause = '1 = 1';
+
+  const parameters = {
+    where: whereClause,
+    outFields: 'Data, Introduction, HowToUse, References_',
+    f: 'json'
+  };
+
+  const response = await fetch(`${url}/query?${stringify(parameters)}`);
+  const responseJson = await response.json();
+
+  return responseJson.features.map(feature => feature.attributes);
+};
