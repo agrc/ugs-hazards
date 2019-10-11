@@ -38,10 +38,14 @@ export default props => {
       const flatUnitCodes = hazardInfos.reduce((previous, { units }) => previous.concat(units), []);
       setQueriesWithResults(hazardInfos.map(info => [info.url, info.hazard]));
 
-      const groupings = await queryGroupingAsync(flatUnitCodes);
-      const hazardIntroText = await queryIntroTextAsync(flatUnitCodes);
-      const hazardUnitText = await queryHazardUnitTableAsync(flatUnitCodes);
-      const hazardReferences = await queryReferenceTableAsync(flatUnitCodes);
+      // these queries can be done simultaneously
+      const [groupings, hazardIntroText, hazardUnitText, hazardReferences] = await Promise.all([
+        queryGroupingAsync(flatUnitCodes),
+        queryIntroTextAsync(flatUnitCodes),
+        queryHazardUnitTableAsync(flatUnitCodes),
+        queryReferenceTableAsync(flatUnitCodes)
+      ]);
+
       const flatGroups = groupings.map(({ HazardGroup }) => HazardGroup);
       const groupText = await queryGroupTextAsync(flatGroups);
 
