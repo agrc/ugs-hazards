@@ -144,3 +144,22 @@ export const queryGroupTextAsync = async (groups) => {
 
   return responseJson.features.map(feature => feature.attributes);
 };
+
+export const queryReportTextTableAsync = async () => {
+  console.log('QueryService.queryReportTextTableAsync');
+
+  const url = config.urls.reportTextTable;
+
+  const whereClause = '1 = 1';
+
+  const parameters = {
+    where: whereClause,
+    outFields: 'Section, Text',
+    f: 'json'
+  };
+
+  const response = await fetch(`${url}/query?${stringify(parameters)}`);
+  const responseJson = await response.json();
+
+  return responseJson.features.map(feature => feature.attributes);
+};

@@ -7,7 +7,8 @@ export default {
     hazardGroupTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/1`,
     hazardIntroTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/2`,
     hazardReferenceTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/3`,
-    hazardUnitTextTable: `${baseUrl}/Report_tables_View/FeatureServer/4`
+    hazardUnitTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/4`,
+    reportTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/8`
   },
   queries: [
     // ['Utah_Geologic_Hazards/FeatureServer/0', '???'], // flood canyon

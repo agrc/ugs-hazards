@@ -1,3 +1,9 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .page-break {
   break-before: page;
   border-top: 1px dashed gray;
