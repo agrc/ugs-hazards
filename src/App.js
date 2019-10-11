@@ -17,6 +17,7 @@ import {
 } from './services/QueryService';
 import { getHazardCodeFromUnitCode } from './helpers';
 import CoverPage from './reportParts/CoverPage';
+import SummaryPage from './reportParts/SummaryPage';
 
 
 export default props => {
@@ -103,6 +104,7 @@ export default props => {
   return (<>
     <button className="hide-for-print print-button" onClick={window.print}>Print Report</button>
     <CoverPage aoiDescription={props.description} {...reportTextMap} />
+    <SummaryPage {...reportTextMap} />
     <HazardMap aoi={props.polygon} queriesWithResults={queriesWithResults}>
      {Object.keys(groupToHazardMap).map(groupName => (
         <Group key={groupName} name={groupName} text={groupToTextMap[groupName]}>
