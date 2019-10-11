@@ -123,5 +123,10 @@ export default props => {
         </Group>
       ))}
     </HazardMap>
+    <div className="header page-break">
+      <h1>OTHER GEOLOGIC HAZARD RESOURCES</h1>
+      <p dangerouslySetInnerHTML={{__html: reportTextMap.OtherResources}}
+        title={config.notProd && 'ReportTextTable.Text(OtherResources)'}></p>
+    </div>
   </>);
 };
