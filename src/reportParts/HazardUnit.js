@@ -1,14 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import getModules from '../esriModules';
 import config from '../config';
+import { HazardMapContext } from './HazardMap';
+import { getHazardCodeFromUnitCode } from '../helpers';
+import './HazardUnit.scss';
 
 
 export default props => {
+  console.log('HazardUnit', props);
   const [hasLegend, setHasLegend] = useState(false);
   const legend = useRef(null);
+  const mapContext = useContext(HazardMapContext);
 
   useEffect(() => {
     const buildLegend = async renderer => {
+      console.log('buildLegend', renderer);
       const { symbolUtils } = await getModules();
       let renderers = [];
 
@@ -29,10 +35,12 @@ export default props => {
       setHasLegend(true);
     };
 
-    if (!hasLegend && props.renderer) {
-      buildLegend(props.renderer);
+    console.log('mapContext', mapContext);
+    const assets = mapContext.visualAssets[getHazardCodeFromUnitCode(props.HazardUnit)];
+    if (!hasLegend && assets) {
+      buildLegend(assets.renderer);
     }
-  }, [hasLegend, props.renderer, props.HazardUnit]);
+  }, [hasLegend, props.HazardUnit, mapContext]);
 
   return (
     <div className="unit">

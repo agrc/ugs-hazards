@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
-import config from './config';
-import AoiContext from './AoiContext';
-import Hazard from './Hazard';
-import getModules from './esriModules';
+import React, { useState, useEffect, createContext } from 'react';
+import config from '../config';
+import getModules from '../esriModules';
 
+
+export const HazardMapContext = createContext({
+  visualAssets: {}
+});
 
 // we tried moving these to useRef but the code silently failed at map.current.when()
 let map;
 let view;
 export default props => {
+  console.log('HazardMap.render', props);
+  const [ visualAssets, setVisualAssets ] = useState({});
   const [ mapLoading, setMapLoading ] = useState(false);
   const [ mapLoaded, setMapLoaded ] = useState(false);
-  const [ visualAssets, setVisualAssets ] = useState([]);
-
-  const aoi = useContext(AoiContext);
-
   const createMap = async () => {
-    console.log('HazardMap.createMap', props.hazards);
+    console.log('HazardMap.createMap');
 
     setMapLoading(true);
 
@@ -32,7 +32,7 @@ export default props => {
       width: 4
     };
 
-    const polygon = new Polygon(aoi);
+    const polygon = new Polygon(props.aoi);
 
     const polylineGraphic = new Graphic({
       geometry: polygon,
@@ -60,21 +60,21 @@ export default props => {
 
   useEffect(() => {
     const getScreenshots = async () => {
-      const newScreenshots = [];
-      for (let index = 0; index < props.hazards.length; index++) {
-        const hazard = props.hazards[index];
-        const { screenshot, renderer } = await getScreenshot(hazard.url);
+      const newScreenshots = {};
+      for (let index = 0; index < props.queriesWithResults.length; index++) {
+        const [url, hazardCode] = props.queriesWithResults[index];
+        const { screenshot, renderer } = await getScreenshot(url);
 
-        newScreenshots.push({mapImage: screenshot.dataUrl, renderer});
+        newScreenshots[hazardCode] = {mapImage: screenshot.dataUrl, renderer};
       }
 
       setVisualAssets(newScreenshots);
     };
 
-    if (mapLoaded && props.hazards.length > 0) {
+    if (mapLoaded && props.queriesWithResults.length > 0) {
       getScreenshots();
     }
-  }, [props.hazards, mapLoaded]);
+  }, [props.queriesWithResults, mapLoaded]);
 
   if (!mapLoading) {
     createMap();
@@ -82,7 +82,9 @@ export default props => {
 
   return (
     <>
-      { props.hazards.map((hazard, index) => <Hazard key={index} {...hazard} {...visualAssets[index]} />) }
+      <HazardMapContext.Provider value={{ visualAssets }}>
+        {props.children}
+      </HazardMapContext.Provider>
     </>
   );
 };
