@@ -1,5 +1,6 @@
 const baseUrl = 'https://services.arcgis.com/ZzrwjTRez6FJiOq4/arcgis/rest/services';
 export default {
+  notProd: process.env.REACT_APP_ENVIRONMENT !== 'production',
   urls: {
     baseUrl,
     hazardGroupingsTable: `${baseUrl}/Report_Tables_View/FeatureServer/0`,

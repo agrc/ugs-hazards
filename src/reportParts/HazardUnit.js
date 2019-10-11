@@ -45,9 +45,11 @@ export default props => {
   return (
     <div className="unit">
       <span ref={legend} className="unit__legend"></span>
-      <p dangerouslySetInnerHTML={{ __html: props[config.fieldNames.Description] }}></p>
+      <p dangerouslySetInnerHTML={{ __html: props[config.fieldNames.Description] }}
+        title={config.notProd && 'HazardUnitTextTable.Description'}></p>
       <h4>How to Use This Map</h4>
-      <p dangerouslySetInnerHTML={{ __html: props[config.fieldNames.HowToUse] }}></p>
+      <p dangerouslySetInnerHTML={{ __html: props[config.fieldNames.HowToUse] }}
+        title={config.notProd && 'HazardUnitTextTable.HowToUse'}></p>
     </div>
   );
 };
