@@ -1,5 +1,6 @@
 import config from '../config';
 import { stringify } from 'query-string';
+import { getHazardCodeFromUnitCode } from '../helpers';
 
 
 const defaultParameters = {
@@ -59,7 +60,7 @@ export const queryReferenceTableAsync = async (units) => {
 
   const url = config.urls.hazardReferenceTextTable;
 
-  units = new Set(units.map(unit => unit.slice(-3).toUpperCase()));
+  units = new Set(units.map(unit => getHazardCodeFromUnitCode(unit)));
 
   const whereClause = `${config.fieldNames.Hazard} IN ('${Array.from(units).join('\',\'')}')`;
 
@@ -82,7 +83,7 @@ export const queryIntroTextAsync = async (units) => {
 
   const url = config.urls.hazardIntroTextTable;
 
-  units = new Set(units.map(unit => unit.slice(-3).toUpperCase()));
+  units = new Set(units.map(unit => getHazardCodeFromUnitCode(unit)));
 
   const whereClause = `${config.fieldNames.Hazard} IN ('${Array.from(units).join('\',\'')}')`;
 
@@ -105,13 +106,34 @@ export const queryGroupingAsync = async (units) => {
 
   const url = config.urls.hazardGroupingsTable;
 
-  units = new Set(units.map(unit => unit.slice(-3).toUpperCase()));
+  units = new Set(units.map(unit => getHazardCodeFromUnitCode(unit)));
 
   const whereClause = `${config.fieldNames.HazardCode} IN ('${Array.from(units).join('\',\'')}')`;
 
   const parameters = {
     where: whereClause,
     outFields: 'HazardCode,HazardGroup',
+    returnGeometry: false,
+    returnCentroid: false,
+    f: 'json'
+  };
+
+  const response = await fetch(`${url}/query?${stringify(parameters)}`);
+  const responseJson = await response.json();
+
+  return responseJson.features.map(feature => feature.attributes);
+};
+
+export const queryGroupTextAsync = async (groups) => {
+  console.log('QueryService.queryGroupTextAsync');
+
+  const url = config.urls.hazardGroupTextTable;
+
+  const whereClause = `HazardGroup IN ('${Array.from(new Set(groups)).join('\',\'')}')`;
+
+  const parameters = {
+    where: whereClause,
+    outFields: 'HazardGroup,Text',
     returnGeometry: false,
     returnCentroid: false,
     f: 'json'

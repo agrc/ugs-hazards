@@ -3,6 +3,7 @@ export default {
   urls: {
     baseUrl,
     hazardGroupingsTable: `${baseUrl}/Report_Tables_View/FeatureServer/0`,
+    hazardGroupTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/1`,
     hazardIntroTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/2`,
     hazardReferenceTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/3`,
     hazardUnitTextTable: `${baseUrl}/Report_tables_View/FeatureServer/4`
