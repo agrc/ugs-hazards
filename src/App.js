@@ -13,11 +13,13 @@ import {
   queryIntroTextAsync,
   queryGroupingAsync,
   queryGroupTextAsync,
-  queryReportTextTableAsync
+  queryReportTextTableAsync,
+  queryOtherDataTable
 } from './services/QueryService';
 import { getHazardCodeFromUnitCode } from './helpers';
 import CoverPage from './reportParts/CoverPage';
 import SummaryPage from './reportParts/SummaryPage';
+import OtherDataPage from './reportParts/OtherDataPage';
 
 
 export default props => {
@@ -28,6 +30,7 @@ export default props => {
   const [queriesWithResults, setQueriesWithResults] = useState([]);
   const [groupToTextMap, setGroupToTextMap] = useState([]);
   const [reportTextMap, setReportTextMap] = useState({});
+  const [otherDataMap, setOtherDataMap] = useState({});
 
   useEffect(() => {
     const getData = async () => {
@@ -48,14 +51,22 @@ export default props => {
         hazardIntroText,
         hazardUnitText,
         hazardReferences,
-        reportTextRows
+        reportTextRows,
+        otherDataRows
       ] = await Promise.all([
         queryGroupingAsync(flatUnitCodes),
         queryIntroTextAsync(flatUnitCodes),
         queryHazardUnitTableAsync(flatUnitCodes),
         queryReferenceTableAsync(flatUnitCodes),
-        queryReportTextTableAsync()
+        queryReportTextTableAsync(),
+        queryOtherDataTable()
       ]);
+
+      const otherDataMapBuilder = {};
+      otherDataRows.forEach(row => {
+        otherDataMapBuilder[row.Data] = row;
+      });
+      setOtherDataMap(otherDataMapBuilder);
 
       const reportTextMapBuilder = {};
       reportTextRows.forEach(({ Section, Text }) => {
@@ -123,6 +134,12 @@ export default props => {
         </Group>
       ))}
     </HazardMap>
+    <OtherDataPage {...otherDataMap['Lidar Elevation Data']}>
+      {"<lidar-specific stuff>"}
+    </OtherDataPage>
+    <OtherDataPage {...otherDataMap['Aerial Photography and Imagery']}>
+      {"<imagery-specific stuff>"}
+    </OtherDataPage>
     <div className="header page-break">
       <h1>OTHER GEOLOGIC HAZARD RESOURCES</h1>
       <p dangerouslySetInnerHTML={{__html: reportTextMap.OtherResources}}

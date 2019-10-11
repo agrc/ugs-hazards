@@ -8,6 +8,7 @@ export default {
     hazardIntroTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/2`,
     hazardReferenceTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/3`,
     hazardUnitTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/4`,
+    otherDataTable: `${baseUrl}/Report_Tables_View/FeatureServer/7`,
     reportTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/8`
   },
   queries: [
