@@ -96,17 +96,17 @@ export const queryGroupTextAsync = groups => {
 export const queryReportTextTableAsync = () => {
   console.log('QueryService.queryReportTextTableAsync');
 
-  const where = '1 = 1';
-  const outFields = 'Section, Text';
+  const where = '1=1';
+  const outFields = 'Section,Text';
 
   return queryTable(config.urls.reportTextTable, where, outFields);
 };
 
-export const queryOtherDataTable = () => {
+export const queryOtherDataTableAsync = () => {
   console.log('QueryService.queryOtherDataTable');
 
-  const where = '1 = 1';
-  const outFields = 'Data, Introduction, HowToUse, References_';
+  const where = '1=1';
+  const outFields = 'Data,Introduction,HowToUse,References_';
 
   return queryTable(config.urls.otherDataTable, where, outFields);
 };
