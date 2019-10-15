@@ -7,14 +7,13 @@ export default props => {
 
   let table1Heading = 'Table 1';
   let table2Heading = 'Table 2';
-  Object.keys(props).forEach(key => {
-    if (table1Heading in props) {
-      table1Heading = props[key];
-    }
-    if (table2Heading in props) {
-      table2Heading = props[key];
-    }
-  });
+
+  if (table1Heading in props) {
+    table1Heading = props[table1Heading];
+  }
+  if (table2Heading in props) {
+    table2Heading = props[table2Heading];
+  }
 
   return (
     <div className="page-break">
