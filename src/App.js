@@ -14,7 +14,7 @@ import {
   queryGroupingAsync,
   queryGroupTextAsync,
   queryReportTextTableAsync,
-  queryOtherDataTable
+  queryOtherDataTableAsync
 } from './services/QueryService';
 import { getHazardCodeFromUnitCode } from './helpers';
 import CoverPage from './reportParts/CoverPage';
@@ -59,7 +59,7 @@ export default props => {
         queryHazardUnitTableAsync(flatUnitCodes),
         queryReferenceTableAsync(flatUnitCodes),
         queryReportTextTableAsync(),
-        queryOtherDataTable()
+        queryOtherDataTableAsync()
       ]);
 
       const otherDataMapBuilder = {};
