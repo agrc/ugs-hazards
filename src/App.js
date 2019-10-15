@@ -120,7 +120,8 @@ export default props => {
      {Object.keys(groupToHazardMap).map(groupName => (
         <Group key={groupName} name={groupName} text={groupToTextMap[groupName]}>
           {hazardIntroText && hazardReferences && hazardToUnitMap && groupToHazardMap[groupName].map(hazardCode => {
-            const introText = hazardIntroText.filter(x => x.Hazard === hazardCode)[0].Text;
+            const intro = hazardIntroText.filter(x => x.Hazard === hazardCode)[0];
+            const introText = (intro) ? intro.Text : null;
             const references = hazardReferences.filter(x => x.Hazard === hazardCode);
             const units = hazardToUnitMap[hazardCode];
                 return (
