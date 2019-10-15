@@ -74,7 +74,7 @@ export default props => {
       });
       setReportTextMap(reportTextMapBuilder);
 
-      const flatGroups = groupings.map(({ HazardGroup }) => HazardGroup);
+      const flatGroups = Array.from(new Set(groupings.map(({ HazardGroup }) => HazardGroup)));
       const groupText = await queryGroupTextAsync(flatGroups);
 
       const groupToTextMapBuilder = {};
