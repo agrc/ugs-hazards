@@ -42,7 +42,7 @@ export default props => {
       console.log('queried all units');
 
       const hazardInfos = allHazardInfos.filter(({ units }) => units.length > 0);
-      const flatUnitCodes = hazardInfos.reduce((previous, { units }) => previous.concat(units), []);
+      const flatUnitCodes = Array.from(new Set(hazardInfos.reduce((previous, { units }) => previous.concat(units), [])));
       setQueriesWithResults(hazardInfos.map(info => [info.url, info.hazard]));
 
       // these queries can be done simultaneously
