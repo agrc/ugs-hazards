@@ -3,14 +3,6 @@ import { stringify } from 'query-string';
 import { getHazardCodeFromUnitCode } from '../helpers';
 
 
-const defaultParameters = {
-  geometryType: 'esriGeometryPolygon',
-  returnGeometry: false,
-  returnCentroid: false,
-  spatialRel: 'esriSpatialRelIntersects',
-  f: 'json'
-};
-
 export const queryUnitsAsync = async (meta, aoi) => {
   console.log('QueryService.queryUnitsAsync');
 
@@ -19,9 +11,11 @@ export const queryUnitsAsync = async (meta, aoi) => {
   const hazardField = `${hazard}HazardUnit`;
 
   const parameters = {
+    geometryType: 'esriGeometryPolygon',
     geometry: JSON.stringify(aoi),
+    returnGeometry: false,
     outFields: hazardField,
-    ...defaultParameters
+    f: 'json'
   };
 
   const response = await fetch(`${config.urls.baseUrl}/${url}/query?${stringify(parameters)}`);
@@ -34,18 +28,14 @@ export const queryUnitsAsync = async (meta, aoi) => {
   };
 };
 
-export const queryHazardUnitTableAsync = async (units) => {
-  console.log('QueryService.queryHazardUnitTableAsync');
+const getDistinctHazardCodesFromUnits = units => {
+  return units.map(unit => getHazardCodeFromUnitCode(unit));
+}
 
-  const url = config.urls.hazardUnitTextTable;
-
-  const whereClause = `HazardUnit IN ('${units.join('\',\'')}')`;
-
+const queryTable = async (url, where, outFields) => {
   const parameters = {
-    where: whereClause,
-    outFields: 'HazardName,HazardUnit,HowToUse,Description',
-    returnGeometry: false,
-    returnCentroid: false,
+    where,
+    outFields,
     f: 'json'
   };
 
@@ -53,132 +43,70 @@ export const queryHazardUnitTableAsync = async (units) => {
   const responseJson = await response.json();
 
   return responseJson.features.map(feature => feature.attributes);
+};
+
+export const queryHazardUnitTableAsync = async (units) => {
+  console.log('QueryService.queryHazardUnitTableAsync');
+
+  const where = `HazardUnit IN ('${units.join('\',\'')}')`;
+  const outFields = 'HazardName,HazardUnit,HowToUse,Description';
+
+  return await queryTable(config.urls.hazardUnitTextTable, where, outFields);
 };
 
 export const queryReferenceTableAsync = async (units) => {
   console.log('QueryService.queryReferenceTableAsync');
 
-  const url = config.urls.hazardReferenceTextTable;
+  units = getDistinctHazardCodesFromUnits(units);
+  const where = `Hazard IN ('${Array.from(units).join('\',\'')}')`;
+  const outFields = 'Hazard,Text';
 
-  units = new Set(units.map(unit => getHazardCodeFromUnitCode(unit)));
-
-  const whereClause = `Hazard IN ('${Array.from(units).join('\',\'')}')`;
-
-  const parameters = {
-    where: whereClause,
-    outFields: 'Hazard,Text',
-    returnGeometry: false,
-    returnCentroid: false,
-    f: 'json'
-  };
-
-  const response = await fetch(`${url}/query?${stringify(parameters)}`);
-  const responseJson = await response.json();
-
-  return responseJson.features.map(feature => feature.attributes);
+  return queryTable(config.urls.hazardReferenceTextTable, where, outFields);
 };
 
 export const queryIntroTextAsync = async (units) => {
   console.log('QueryService.queryIntroTextAsync');
 
-  const url = config.urls.hazardIntroTextTable;
+  units = getDistinctHazardCodesFromUnits(units);
+  const where = `Hazard IN ('${Array.from(units).join('\',\'')}')`;
+  const outFields = 'Hazard,Text';
 
-  units = new Set(units.map(unit => getHazardCodeFromUnitCode(unit)));
-
-  const whereClause = `Hazard IN ('${Array.from(units).join('\',\'')}')`;
-
-  const parameters = {
-    where: whereClause,
-    outFields: 'Hazard,Text',
-    returnGeometry: false,
-    returnCentroid: false,
-    f: 'json'
-  };
-
-  const response = await fetch(`${url}/query?${stringify(parameters)}`);
-  const responseJson = await response.json();
-
-  return responseJson.features.map(feature => feature.attributes);
+  return queryTable(config.urls.hazardIntroTextTable, where, outFields);
 };
 
 export const queryGroupingAsync = async (units) => {
   console.log('QueryService.queryGroupingAsync');
 
-  const url = config.urls.hazardGroupingsTable;
+  units = getDistinctHazardCodesFromUnits(units);
+  const where = `HazardCode IN ('${Array.from(units).join('\',\'')}')`;
+  const outFields = 'HazardCode,HazardGroup';
 
-  units = new Set(units.map(unit => getHazardCodeFromUnitCode(unit)));
-
-  const whereClause = `HazardCode IN ('${Array.from(units).join('\',\'')}')`;
-
-  const parameters = {
-    where: whereClause,
-    outFields: 'HazardCode,HazardGroup',
-    returnGeometry: false,
-    returnCentroid: false,
-    f: 'json'
-  };
-
-  const response = await fetch(`${url}/query?${stringify(parameters)}`);
-  const responseJson = await response.json();
-
-  return responseJson.features.map(feature => feature.attributes);
+  return queryTable(config.urls.hazardGroupingsTable, where, outFields);
 };
 
 export const queryGroupTextAsync = async (groups) => {
   console.log('QueryService.queryGroupTextAsync');
 
-  const url = config.urls.hazardGroupTextTable;
+  const where = `HazardGroup IN ('${Array.from(new Set(groups)).join('\',\'')}')`;
+  const outFields = 'HazardGroup,Text';
 
-  const whereClause = `HazardGroup IN ('${Array.from(new Set(groups)).join('\',\'')}')`;
-
-  const parameters = {
-    where: whereClause,
-    outFields: 'HazardGroup,Text',
-    returnGeometry: false,
-    returnCentroid: false,
-    f: 'json'
-  };
-
-  const response = await fetch(`${url}/query?${stringify(parameters)}`);
-  const responseJson = await response.json();
-
-  return responseJson.features.map(feature => feature.attributes);
+  return queryTable(config.urls.hazardGroupTextTable, where, outFields);
 };
 
 export const queryReportTextTableAsync = async () => {
   console.log('QueryService.queryReportTextTableAsync');
 
-  const url = config.urls.reportTextTable;
+  const where = '1 = 1';
+  const outFields = 'Section, Text';
 
-  const whereClause = '1 = 1';
-
-  const parameters = {
-    where: whereClause,
-    outFields: 'Section, Text',
-    f: 'json'
-  };
-
-  const response = await fetch(`${url}/query?${stringify(parameters)}`);
-  const responseJson = await response.json();
-
-  return responseJson.features.map(feature => feature.attributes);
+  return queryTable(config.urls.reportTextTable, where, outFields);
 };
 
 export const queryOtherDataTable = async () => {
   console.log('QueryService.queryOtherDataTable');
 
-  const url = config.urls.otherDataTable;
+  const where = '1 = 1';
+  const outFields = 'Data, Introduction, HowToUse, References_';
 
-  const whereClause = '1 = 1';
-
-  const parameters = {
-    where: whereClause,
-    outFields: 'Data, Introduction, HowToUse, References_',
-    f: 'json'
-  };
-
-  const response = await fetch(`${url}/query?${stringify(parameters)}`);
-  const responseJson = await response.json();
-
-  return responseJson.features.map(feature => feature.attributes);
+  return queryTable(config.urls.otherDataTable, where, outFields);
 };
