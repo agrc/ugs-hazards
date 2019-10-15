@@ -16,7 +16,7 @@ export default {
     ['Utah_Geologic_Hazards/FeatureServer/1', 'FLH'],
     ['Utah_Geologic_Hazards/FeatureServer/2', 'SGS'],
     ['Utah_Geologic_Hazards/FeatureServer/3', 'LSS'],
-    // ['Utah_Geologic_Hazards/FeatureServer/4', '???'], // landslides
+    ['Utah_Geologic_Hazards/FeatureServer/4', 'LSF'], // landslides
     ['Utah_Geologic_Hazards/FeatureServer/6', 'CAS'],
     ['Utah_Geologic_Hazards/FeatureServer/7', 'CSS'],
     ['Utah_Geologic_Hazards/FeatureServer/8', 'CRS'],
