@@ -12,31 +12,31 @@ export default {
     reportTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/8`
   },
   queries: [
-    ['Utah_Geologic_Hazards/FeatureServer/0', 'FCH'],
-    ['Utah_Geologic_Hazards/FeatureServer/1', 'FLH'],
-    ['Utah_Geologic_Hazards/FeatureServer/2', 'SGS'],
-    ['Utah_Geologic_Hazards/FeatureServer/3', 'LSS'],
+    ['Utah_Geologic_Hazards/FeatureServer/0', 'FCH'], // Flood Canyon Hazard
+    ['Utah_Geologic_Hazards/FeatureServer/1', 'FLH'], // Flood Hazard
+    ['Utah_Geologic_Hazards/FeatureServer/2', 'SGS'], // Shallow Groundwater Susceptibility
+    ['Utah_Geologic_Hazards/FeatureServer/3', 'LSS'], // Landslide Susceptibility
     ['Utah_Geologic_Hazards/FeatureServer/4', 'LSF'], // landslides
-    ['Utah_Geologic_Hazards/FeatureServer/6', 'CAS'],
-    ['Utah_Geologic_Hazards/FeatureServer/7', 'CSS'],
-    ['Utah_Geologic_Hazards/FeatureServer/8', 'CRS'],
-    ['Utah_Geologic_Hazards/FeatureServer/9', 'EFH'],
-    ['Utah_Geologic_Hazards/FeatureServer/10', 'ERZ'],
-    ['Utah_Geologic_Hazards/FeatureServer/11', 'EXS'],
-    ['Utah_Geologic_Hazards/FeatureServer/12', 'GSP'],
-    ['Utah_Geologic_Hazards/FeatureServer/13', 'MKF'],
-    ['Utah_Geologic_Hazards/FeatureServer/14', 'PES'],
-    ['Utah_Geologic_Hazards/FeatureServer/15', 'GRS'],
-    ['Utah_Geologic_Hazards/FeatureServer/16', 'RFH'],
-    ['Utah_Geologic_Hazards/FeatureServer/17', 'SDH'],
-    ['Utah_Geologic_Hazards/FeatureServer/18', 'SBP'],
-    ['Utah_Geologic_Hazards/FeatureServer/19', 'SLS'],
-    ['Utah_Geologic_Hazards/FeatureServer/20', 'WSS'],
+    ['Utah_Geologic_Hazards/FeatureServer/6', 'CAS'], // Caliche Susceptibility
+    ['Utah_Geologic_Hazards/FeatureServer/7', 'CSS'], // Collapsible Soil Susceptibility
+    ['Utah_Geologic_Hazards/FeatureServer/8', 'CRS'], // Corrosive Soil and Rock Susceptibility
+    ['Utah_Geologic_Hazards/FeatureServer/9', 'EFH'], // Earth Fissure Hazard
+    ['Utah_Geologic_Hazards/FeatureServer/10', 'ERZ'], // Erosion Hazard Zones
+    ['Utah_Geologic_Hazards/FeatureServer/11', 'EXS'], // Expansive Soil and Rock Susceptibility
+    ['Utah_Geologic_Hazards/FeatureServer/12', 'GSP'], // Ground Subsidence Potential
+    ['Utah_Geologic_Hazards/FeatureServer/13', 'MKF'], // Karst Features
+    ['Utah_Geologic_Hazards/FeatureServer/14', 'PES'], // Piping and Erosion Susceptibility
+    ['Utah_Geologic_Hazards/FeatureServer/15', 'GRS'], // Radon Susceptibility
+    ['Utah_Geologic_Hazards/FeatureServer/16', 'RFH'], // Rockfall Hazard
+    ['Utah_Geologic_Hazards/FeatureServer/17', 'SDH'], // Salt Tectonics Related Ground Deformation
+    ['Utah_Geologic_Hazards/FeatureServer/18', 'SBP'], // Shallow Bedrock Potential
+    ['Utah_Geologic_Hazards/FeatureServer/19', 'SLS'], // Soluble Soil and Rock Susceptibility
+    ['Utah_Geologic_Hazards/FeatureServer/20', 'WSS'], // Wind-Blown Sand Susceptibility
     // ['Utah_Earthquake_Hazards/FeatureServer/0', '??'], // utah epicenters
     // ['Utah_Earthquake_Hazards/FeatureServer/1', '??'], // mining-induced epicenters
     // ['Utah_Earthquake_Hazards/FeatureServer/2', '??'], // quaternary faults
-    ['Utah_Earthquake_Hazards/FeatureServer/3', 'LQS'],
-    ['Utah_Earthquake_Hazards/FeatureServer/4', 'SFR'],
+    ['Utah_Earthquake_Hazards/FeatureServer/3', 'LQS'], // Liquefaction Susceptibility
+    ['Utah_Earthquake_Hazards/FeatureServer/4', 'SFR'], // Surface Fault Rupture Hazard Special Study Zone
   ],
   webMaps: {
     hazard: '895afaac7ee04933b91ee9dd1f88c823'
