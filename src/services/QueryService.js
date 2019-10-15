@@ -39,7 +39,7 @@ export const queryHazardUnitTableAsync = async (units) => {
 
   const url = config.urls.hazardUnitTextTable;
 
-  const whereClause = `${config.fieldNames.HazardUnit} IN ('${units.join('\',\'')}')`;
+  const whereClause = `HazardUnit IN ('${units.join('\',\'')}')`;
 
   const parameters = {
     where: whereClause,
@@ -62,7 +62,7 @@ export const queryReferenceTableAsync = async (units) => {
 
   units = new Set(units.map(unit => getHazardCodeFromUnitCode(unit)));
 
-  const whereClause = `${config.fieldNames.Hazard} IN ('${Array.from(units).join('\',\'')}')`;
+  const whereClause = `Hazard IN ('${Array.from(units).join('\',\'')}')`;
 
   const parameters = {
     where: whereClause,
@@ -85,7 +85,7 @@ export const queryIntroTextAsync = async (units) => {
 
   units = new Set(units.map(unit => getHazardCodeFromUnitCode(unit)));
 
-  const whereClause = `${config.fieldNames.Hazard} IN ('${Array.from(units).join('\',\'')}')`;
+  const whereClause = `Hazard IN ('${Array.from(units).join('\',\'')}')`;
 
   const parameters = {
     where: whereClause,
@@ -108,7 +108,7 @@ export const queryGroupingAsync = async (units) => {
 
   units = new Set(units.map(unit => getHazardCodeFromUnitCode(unit)));
 
-  const whereClause = `${config.fieldNames.HazardCode} IN ('${Array.from(units).join('\',\'')}')`;
+  const whereClause = `HazardCode IN ('${Array.from(units).join('\',\'')}')`;
 
   const parameters = {
     where: whereClause,

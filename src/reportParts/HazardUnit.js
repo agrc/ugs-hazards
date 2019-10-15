@@ -47,10 +47,10 @@ export default props => {
       <div className="legend-container">
         <div ref={legend} className="legend"></div>
         <div>
-          <p dangerouslySetInnerHTML={{ __html: props[config.fieldNames.Description] }}
+          <p dangerouslySetInnerHTML={{ __html: props.Description }}
             title={config.notProd && 'HazardUnitTextTable.Description'}></p>
           <h4>How to Use This Map</h4>
-          <p dangerouslySetInnerHTML={{ __html: props[config.fieldNames.HowToUse] }}
+          <p dangerouslySetInnerHTML={{ __html: props.HowToUse }}
             title={config.notProd && 'HazardUnitTextTable.HowToUse'}></p>
         </div>
       </div>

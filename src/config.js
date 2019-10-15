@@ -40,19 +40,5 @@ export default {
   ],
   webMaps: {
     hazard: '895afaac7ee04933b91ee9dd1f88c823'
-  },
-  fieldNames: {
-    // common
-    HazardUnit: 'HazardUnit',
-    HazardName: 'HazardName',
-    Hazard: 'Hazard',
-    Text: 'Text',
-
-    // grouping
-    HazardCode: 'HazardCode',
-
-    // HazardUnitTextTable
-    Description: 'Description',
-    HowToUse: 'HowToUse',
   }
 };
