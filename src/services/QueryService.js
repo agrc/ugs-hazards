@@ -58,7 +58,7 @@ export const queryReferenceTableAsync = units => {
   console.log('QueryService.queryReferenceTableAsync');
 
   units = getDistinctHazardCodesFromUnits(units);
-  const where = `Hazard IN ('${Array.from(units).join('\',\'')}')`;
+  const where = `Hazard IN ('${units.join('\',\'')}')`;
   const outFields = 'Hazard,Text';
 
   return queryTable(config.urls.hazardReferenceTextTable, where, outFields);
@@ -68,7 +68,7 @@ export const queryIntroTextAsync = units => {
   console.log('QueryService.queryIntroTextAsync');
 
   units = getDistinctHazardCodesFromUnits(units);
-  const where = `Hazard IN ('${Array.from(units).join('\',\'')}')`;
+  const where = `Hazard IN ('${units.join('\',\'')}')`;
   const outFields = 'Hazard,Text';
 
   return queryTable(config.urls.hazardIntroTextTable, where, outFields);
@@ -78,7 +78,7 @@ export const queryGroupingAsync = units => {
   console.log('QueryService.queryGroupingAsync');
 
   units = getDistinctHazardCodesFromUnits(units);
-  const where = `HazardCode IN ('${Array.from(units).join('\',\'')}')`;
+  const where = `HazardCode IN ('${units.join('\',\'')}')`;
   const outFields = 'HazardCode,HazardGroup';
 
   return queryTable(config.urls.hazardGroupingsTable, where, outFields);
@@ -87,7 +87,7 @@ export const queryGroupingAsync = units => {
 export const queryGroupTextAsync = groups => {
   console.log('QueryService.queryGroupTextAsync');
 
-  const where = `HazardGroup IN ('${Array.from(new Set(groups)).join('\',\'')}')`;
+  const where = `HazardGroup IN ('${groups.join('\',\'')}')`;
   const outFields = 'HazardGroup,Text';
 
   return queryTable(config.urls.hazardGroupTextTable, where, outFields);
