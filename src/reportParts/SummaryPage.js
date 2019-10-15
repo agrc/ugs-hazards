@@ -8,9 +8,10 @@ export default props => {
   let table1Heading = 'Table 1';
   let table2Heading = 'Table 2';
   Object.keys(props).forEach(key => {
-    if (key.match(table1Heading)) {
+    if (table1Heading in props) {
       table1Heading = props[key];
-    } else if (key.match(table2Heading)) {
+    }
+    if (table2Heading in props) {
       table2Heading = props[key];
     }
   });
