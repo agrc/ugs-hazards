@@ -12,7 +12,6 @@ export default {
     reportTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/8`
   },
   queries: [
-    ['Utah_Geologic_Hazards/FeatureServer/0', 'FCH'], // Flood Canyon Hazard
     ['Utah_Geologic_Hazards/FeatureServer/1', 'FLH'], // Flood Hazard
     ['Utah_Geologic_Hazards/FeatureServer/2', 'SGS'], // Shallow Groundwater Susceptibility
     ['Utah_Geologic_Hazards/FeatureServer/3', 'LSS'], // Landslide Susceptibility
