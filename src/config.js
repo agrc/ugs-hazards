@@ -38,6 +38,6 @@ export default {
     ['Utah_Earthquake_Hazards/FeatureServer/4', 'SFR'], // Surface Fault Rupture Hazard Special Study Zone
   ],
   webMaps: {
-    hazard: '895afaac7ee04933b91ee9dd1f88c823'
+    hazard: process.env.REACT_APP_WEBMAP
   }
 };
