@@ -13,11 +13,14 @@
 }
 
 .print-button {
-  float: right;
+  display: flex;
+  justify-content: center;
+  height: 2rem;
+  margin-top: 2rem;
 }
 
 @media print {
-  .hide-for-print {
+  .print--hide {
     display: none;
   }
 }
