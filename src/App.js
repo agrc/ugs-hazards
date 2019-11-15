@@ -20,6 +20,35 @@ import { getHazardCodeFromUnitCode } from './helpers';
 import CoverPage from './reportParts/CoverPage';
 import SummaryPage from './reportParts/SummaryPage';
 import OtherDataPage from './reportParts/OtherDataPage';
+import ProgressBar from './reportParts/ProgressBar';
+
+const busyState = {}
+config.queries.forEach((item) => busyState[item[0]] = false);
+Object.values(config.urls).forEach((value, index) => {
+  if (index === 0) {
+    return;
+  }
+
+  busyState[value] = false;
+});
+
+const promiseAllWithProgress = (iterables, progress_callback) => {
+  for (const promise of iterables) {
+    promise.then((value) => {
+      if (!(value.url in busyState)) {
+        console.warn(`${value} not in query state`);
+
+        return;
+      }
+
+      busyState[value.url] = true;
+
+      progress_callback(busyState);
+    });
+  }
+
+  return Promise.all(iterables);
+};
 
 
 export default props => {
@@ -31,13 +60,12 @@ export default props => {
   const [groupToTextMap, setGroupToTextMap] = useState([]);
   const [reportTextMap, setReportTextMap] = useState({});
   const [otherDataMap, setOtherDataMap] = useState({});
+  const [tasks, updateTasks] = useState(busyState);
 
   useEffect(() => {
     const getData = async () => {
       console.log('App.getData');
-      const allHazardInfos = await Promise.all(config.queries.map(featureClassMap => {
-        return queryUnitsAsync(featureClassMap, props.polygon);
-      }));
+      const allHazardInfos = await promiseAllWithProgress(config.queries.map(urlCodeMap => queryUnitsAsync(urlCodeMap, props.polygon)), updateTasks);
 
       console.log('queried all units');
 
@@ -53,35 +81,36 @@ export default props => {
         hazardReferences,
         reportTextRows,
         otherDataRows
-      ] = await Promise.all([
+      ] = await promiseAllWithProgress([
         queryGroupingAsync(flatUnitCodes),
         queryIntroTextAsync(flatUnitCodes),
         queryHazardUnitTableAsync(flatUnitCodes),
         queryReferenceTableAsync(flatUnitCodes),
         queryReportTextTableAsync(),
         queryOtherDataTableAsync()
-      ]);
+      ], updateTasks);
 
       const otherDataMapBuilder = {};
-      otherDataRows.forEach(row => {
+      otherDataRows.results.forEach(row => {
         otherDataMapBuilder[row.Data] = row;
       });
       setOtherDataMap(otherDataMapBuilder);
 
       const reportTextMapBuilder = {};
-      reportTextRows.forEach(({ Section, Text }) => {
+      reportTextRows.results.forEach(({ Section, Text }) => {
         reportTextMapBuilder[Section] = Text;
       });
       setReportTextMap(reportTextMapBuilder);
 
-      const flatGroups = Array.from(new Set(groupings.map(({ HazardGroup }) => HazardGroup)));
+      const flatGroups = Array.from(new Set(groupings.results.map(({ HazardGroup }) => HazardGroup)));
       const groupText = await queryGroupTextAsync(flatGroups);
+      tasks[groupText.url] = true;
 
       const groupToTextMapBuilder = {};
-      groupText.forEach(({ HazardGroup, Text }) => groupToTextMapBuilder[HazardGroup] = Text);
+      groupText.results.forEach(({ HazardGroup, Text }) => groupToTextMapBuilder[HazardGroup] = Text);
 
       const hazardToUnitMapBuilder = {};
-      hazardUnitText.forEach(({ HazardUnit, HazardName, HowToUse, Description }) => {
+      hazardUnitText.results.forEach(({ HazardUnit, HazardName, HowToUse, Description }) => {
         const hazardCode = getHazardCodeFromUnitCode(HazardUnit);
 
         if (!hazardToUnitMapBuilder[hazardCode]) {
@@ -92,7 +121,7 @@ export default props => {
       });
 
       const groupToHazardMapBuilder = {}
-      groupings.forEach(({ HazardCode, HazardGroup }) => {
+      groupings.results.forEach(({ HazardCode, HazardGroup }) => {
         if (!groupToHazardMapBuilder[HazardGroup]) {
           groupToHazardMapBuilder[HazardGroup] = [];
         }
@@ -110,28 +139,36 @@ export default props => {
     if (props.polygon) {
       getData();
     }
-  }, [props.polygon]);
+  }, [tasks, props.polygon]);
 
   return (<>
-    <button className="hide-for-print print-button" onClick={window.print}>Print Report</button>
+    <ProgressBar className="print--hide" tasks={tasks} totalThingsToTrack={100}>
+      <div className="print-button">
+        <button onClick={window.print}>Print Report</button>
+      </div>
+    </ProgressBar>
     <CoverPage aoiDescription={props.description} {...reportTextMap} />
     <SummaryPage {...reportTextMap} />
     <HazardMap aoi={props.polygon} queriesWithResults={queriesWithResults}>
-     {Object.keys(groupToHazardMap).map(groupName => (
+      {Object.keys(groupToHazardMap).map(groupName => (
         <Group key={groupName} name={groupName} text={groupToTextMap[groupName]}>
           {hazardIntroText && hazardReferences && hazardToUnitMap && groupToHazardMap[groupName].map(hazardCode => {
-            const intro = hazardIntroText.filter(x => x.Hazard === hazardCode)[0];
+            const intro = hazardIntroText.results.filter(x => x.Hazard === hazardCode)[0];
             const introText = (intro) ? intro.Text : null;
-            const references = hazardReferences.filter(x => x.Hazard === hazardCode);
+            const references = hazardReferences.results.filter(x => x.Hazard === hazardCode);
             const units = hazardToUnitMap[hazardCode];
-                return (
-                  <Hazard name={units[0].HazardName} introText={introText}
-                    key={hazardCode} code={hazardCode}>
-                    { units.map((unit, index) => <HazardUnit key={index} {...unit}/>) }
-                    <References references={references.map(({ Text }) => Text)}></References>
-                  </Hazard>
-                )
-              })}
+            // add number of maps to task list
+            // units.forEach(unit => tasks[unit.HazardName] = false);
+            // updateTasks(busyState);
+
+            return (
+              <Hazard name={units[0].HazardName} introText={introText}
+                key={hazardCode} code={hazardCode}>
+                { units.map((unit, index) => <HazardUnit key={index} {...unit}/>) }
+                <References references={references.map(({ Text }) => Text)}></References>
+              </Hazard>
+            )
+          })}
         </Group>
       ))}
     </HazardMap>
@@ -143,7 +180,7 @@ export default props => {
     </OtherDataPage>
     <div className="header page-break">
       <h1>OTHER GEOLOGIC HAZARD RESOURCES</h1>
-      <p dangerouslySetInnerHTML={{__html: reportTextMap.OtherResources}}
+      <p dangerouslySetInnerHTML={{ __html: reportTextMap.OtherResources }}
         title={config.notProd && 'ReportTextTable.Text(OtherResources)'}></p>
     </div>
   </>);

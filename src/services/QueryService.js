@@ -42,7 +42,7 @@ const queryTable = async (url, where, outFields) => {
   const response = await fetch(`${url}/query?${stringify(parameters)}`);
   const responseJson = await response.json();
 
-  return responseJson.features.map(feature => feature.attributes);
+  return { url, results: responseJson.features.map(feature => feature.attributes) };
 };
 
 export const queryHazardUnitTableAsync = units => {
