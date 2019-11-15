@@ -4,6 +4,7 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
+    "classnames": "^2.2.6",
     "esri-loader": "^2.12.0",
     "node-sass": "^4.13.0",
     "query-string": "^6.9.0",
