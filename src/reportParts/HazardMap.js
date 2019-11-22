@@ -1,6 +1,7 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useContext, useState, useEffect, createContext } from 'react';
 import config from '../config';
 import getModules from '../esriModules';
+import { ProgressContext } from '../App';
 
 
 export const HazardMapContext = createContext({
@@ -15,6 +16,8 @@ export default props => {
   const [ visualAssets, setVisualAssets ] = useState({});
   const [ mapLoading, setMapLoading ] = useState(false);
   const [ mapLoaded, setMapLoaded ] = useState(false);
+  const { registerProgressItem, setProgressItemAsComplete } = useContext(ProgressContext);
+
   const createMap = async () => {
     console.log('HazardMap.createMap');
 
@@ -58,12 +61,22 @@ export default props => {
     setMapLoaded(true);
   }
 
+  const getProgressId = url => `screenshot-${url}`;
+  useEffect(() => {
+    for (let index = 0; index < props.queriesWithResults.length; index++) {
+      const [url] = props.queriesWithResults[index];
+
+      registerProgressItem(getProgressId(url));
+    }
+  }, [props.queriesWithResults, registerProgressItem]);
+
   useEffect(() => {
     const getScreenshots = async () => {
       const newScreenshots = {};
       for (let index = 0; index < props.queriesWithResults.length; index++) {
         const [url, hazardCode] = props.queriesWithResults[index];
         const { screenshot, renderer } = await getScreenshot(url);
+        setProgressItemAsComplete(getProgressId(url));
 
         newScreenshots[hazardCode] = {mapImage: screenshot.dataUrl, renderer};
       }
@@ -74,7 +87,7 @@ export default props => {
     if (mapLoaded && props.queriesWithResults.length > 0) {
       getScreenshots();
     }
-  }, [props.queriesWithResults, mapLoaded]);
+  }, [props.queriesWithResults, mapLoaded, setProgressItemAsComplete]);
 
   if (!mapLoading) {
     createMap();
