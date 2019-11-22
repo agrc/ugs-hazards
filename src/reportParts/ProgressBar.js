@@ -7,9 +7,14 @@ export default props => {
   console.log('Progress.render');
 
   const values = Object.values(props.tasks);
-  const max = values.length
-  const completed = values.filter(x => x).length;
-  const percent = ((completed / max) * 100);
+  const max = values.length;
+
+  let completed = 0;
+  let percent = 0;
+  if (max > 0) {
+    completed = values.filter(x => x).length;
+    percent = ((completed / max) * 100);
+  }
 
   const classes = classNames(
     "progress-bar",
