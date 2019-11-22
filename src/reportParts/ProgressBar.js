@@ -27,16 +27,18 @@ export default props => {
   )
 
   return (<div className={parentClasses}>
-    <div className="progress">
-      <div className={classes}
-        style={{ width: `${percent}%` }}
-        role="progressbar"
-        area-valuenow={percent}
-        aria-valuemin="0"
-        aria-valuemax={max}
-      ></div>
-    </div>
-    {max <= completed ? props.children : null}
+    {completed < max ?
+      <div className="progress">
+        <div className={classes}
+          style={{ width: `${percent}%` }}
+          role="progressbar"
+          area-valuenow={percent}
+          aria-valuemin="0"
+          aria-valuemax={max}
+        ></div>
+      </div> :
+      props.children
+    }
   </div>
   );
 };
