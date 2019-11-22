@@ -60,8 +60,18 @@ export default props => {
   useEffect(() => {
     const getData = async () => {
       console.log('App.getData');
+
+      const relatedTablesProgressId = 'related tables'
+      registerProgressItem(relatedTablesProgressId);
+
       const allHazardInfos = await Promise.all(config.queries.map(featureClassMap => {
-        return queryUnitsAsync(featureClassMap, props.polygon);
+        registerProgressItem(featureClassMap);
+
+        return queryUnitsAsync(featureClassMap, props.polygon).then(data => {
+          setProgressItemAsComplete(featureClassMap);
+
+          return data;
+        });
       }));
 
       console.log('queried all units');
@@ -86,6 +96,7 @@ export default props => {
         queryReportTextTableAsync(),
         queryOtherDataTableAsync()
       ]);
+      setProgressItemAsComplete(relatedTablesProgressId);
 
       const otherDataMapBuilder = {};
       otherDataRows.forEach(row => {
@@ -135,7 +146,7 @@ export default props => {
     if (props.polygon) {
       getData();
     }
-  }, [props.polygon]);
+  }, [props.polygon, registerProgressItem, setProgressItemAsComplete]);
 
   return (<>
     <ProgressContext.Provider value={{ registerProgressItem, setProgressItemAsComplete }}>
