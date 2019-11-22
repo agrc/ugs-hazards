@@ -139,7 +139,10 @@ export default props => {
 
   return (<>
     <ProgressContext.Provider value={{ registerProgressItem, setProgressItemAsComplete }}>
-    <button className="hide-for-print print-button" onClick={window.print}>Print Report</button>
+      <ProgressBar className="print--hide" tasks={tasks}>
+        <div className="print-button">
+          <button onClick={window.print}>Print Report</button>
+        </div>
       </ProgressBar>
       <CoverPage aoiDescription={props.description} {...reportTextMap} />
       <SummaryPage {...reportTextMap} />
