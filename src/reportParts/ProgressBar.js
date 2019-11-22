@@ -1,7 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 import './ProgressBar.scss';
-import { CombineLatestOperator } from '../../../../Library/Caches/typescript/3.6/node_modules/rxjs/internal/observable/combineLatest';
 
 
 export default props => {
@@ -35,18 +34,4 @@ export default props => {
     {max <= completed ? props.children : null}
   </div>
   );
-
-  // return max <= completed ? props.children :
-  //   (<>
-  //     <div className="progress">
-  //       <div className="progress-bar progress-bar--striped progress-bar--animated"
-  //         style={{ width: `${percent}%` }}
-  //         role="progressbar"
-  //         area-valuenow={percent}
-  //         aria-valuemin="0"
-  //         aria-valuemax={max}
-  //       ></div>
-  //     </div>
-  //   </>
-  //   );
 };
