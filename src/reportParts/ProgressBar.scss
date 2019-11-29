@@ -1,3 +1,5 @@
+@import '../variables';
+
 .progress {
   display: flex;
   height: 1rem;
@@ -15,7 +17,7 @@
     color: #ddd;
     text-align: center;
     white-space: nowrap;
-    background-color: #ff851b;
+    background-color: $defaultColor;
     transition: width .6s ease;
 
     &--striped {
