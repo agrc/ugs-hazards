@@ -15,7 +15,7 @@ export default props => {
       <h2 title={config.notProd && 'HazardUnitTextTable.HazardName (from first unit)'}>{props.name}</h2>
       <p dangerouslySetInnerHTML={{ __html: props.introText }} title={config.notProd && 'HazardIntroTextTable.Text'}></p>
       { visualAssets ? <img src={visualAssets.mapImage}
-        alt="map" style={{width: '100%', minHeight: '200px'}} /> : <Loader /> }
+        alt="map" className="hazard-map-image" /> : <Loader /> }
       {props.children}
     </div>
   );

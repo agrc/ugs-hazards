@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect, createContext } from 'react';
 import config from '../config';
 import getModules from '../esriModules';
 import { ProgressContext } from '../App';
+import './HazardMap.scss';
 
 
 export const HazardMapContext = createContext({
@@ -68,10 +69,15 @@ export default props => {
 
       registerProgressItem(getProgressId(url));
     }
+
+    registerProgressItem(getProgressId(config.overviewMapKey));
+
   }, [props.queriesWithResults, registerProgressItem]);
 
   useEffect(() => {
     const getScreenshots = async () => {
+      console.log('getScreenshots', props.queriesWithResults);
+
       const newScreenshots = {};
       for (let index = 0; index < props.queriesWithResults.length; index++) {
         const [url, hazardCode] = props.queriesWithResults[index];
@@ -80,6 +86,11 @@ export default props => {
 
         newScreenshots[hazardCode] = {mapImage: screenshot.dataUrl, renderer};
       }
+
+      // generate overview map
+      const { screenshot } = await getScreenshot();
+      newScreenshots[config.overviewMapKey] = { mapImage: screenshot.dataUrl };
+      setProgressItemAsComplete(getProgressId(config.overviewMapKey));
 
       setVisualAssets(newScreenshots);
     };
@@ -103,7 +114,7 @@ export default props => {
 };
 
 const getScreenshot = async function(url) {
-  console.log('HazardMap.getScreenshot');
+  console.log('HazardMap.getScreenshot', url);
 
   let renderer;
 

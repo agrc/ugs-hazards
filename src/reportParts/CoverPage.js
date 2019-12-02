@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ugsLogo from '../images/ugs-logo.jpg';
 import config from '../config';
 import './CoverPage.scss';
+import { HazardMapContext } from './HazardMap';
+import Loader from './Loader';
 
 
 export default ({ aoiDescription, aoi, Introduction, Disclaimer }) => {
+  const mapContext = useContext(HazardMapContext);
+  const visualAssets = mapContext.visualAssets[config.overviewMapKey];
+
   return (
     <div className="cover-page">
       <div className="header">
@@ -15,7 +20,8 @@ export default ({ aoiDescription, aoi, Introduction, Disclaimer }) => {
       </div>
       <p dangerouslySetInnerHTML={{ __html: Introduction }}
         title={config.notProd && 'ReportTextTable.Text(Introduction)'}></p>
-      {'<map>'}
+      { visualAssets ? <img src={visualAssets.mapImage}
+        alt="map" className="hazard-map-image" /> : <Loader /> }
       <p dangerouslySetInnerHTML={{ __html: Disclaimer }}
         title={config.notProd && 'ReportTextTable.Text(Disclaimer)'}></p>
     </div>

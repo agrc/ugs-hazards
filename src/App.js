@@ -155,10 +155,10 @@ export default props => {
           <button onClick={window.print}>Print Report</button>
         </div>
       </ProgressBar>
-      <CoverPage aoiDescription={props.description} {...reportTextMap} />
-      <SummaryPage {...reportTextMap} />
       <HazardMap aoi={props.polygon} queriesWithResults={queriesWithResults}>
-      {Object.keys(groupToHazardMap).map(groupName => (
+        <CoverPage aoiDescription={props.description} {...reportTextMap} />
+        <SummaryPage {...reportTextMap} />
+        {Object.keys(groupToHazardMap).map(groupName => (
           <Group key={groupName} name={groupName} text={groupToTextMap[groupName]}>
             {hazardIntroText && hazardReferences && hazardToUnitMap && groupToHazardMap[groupName].map(hazardCode => {
               const intro = hazardIntroText.filter(x => x.Hazard === hazardCode)[0];
@@ -175,13 +175,13 @@ export default props => {
                 })}
           </Group>
         ))}
+        <OtherDataPage {...otherDataMap['Lidar Elevation Data']}>
+          {"<lidar-specific stuff>"}
+        </OtherDataPage>
+        <OtherDataPage {...otherDataMap['Aerial Photography and Imagery']}>
+          {"<imagery-specific stuff>"}
+        </OtherDataPage>
       </HazardMap>
-      <OtherDataPage {...otherDataMap['Lidar Elevation Data']}>
-        {"<lidar-specific stuff>"}
-      </OtherDataPage>
-      <OtherDataPage {...otherDataMap['Aerial Photography and Imagery']}>
-        {"<imagery-specific stuff>"}
-      </OtherDataPage>
       <div className="header page-break">
         <h1>OTHER GEOLOGIC HAZARD RESOURCES</h1>
         <p dangerouslySetInnerHTML={{__html: reportTextMap.OtherResources}}
