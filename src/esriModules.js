@@ -18,7 +18,10 @@ export default async () => {
     Graphic,
     watchUtils,
     symbolUtils
-  ] = await loadModules(requires, { css: true });
+  ] = await loadModules(requires, {
+    version: '4.13',
+    css: true
+  });
 
   return {
     WebMap, MapView, Polygon, Graphic, watchUtils, symbolUtils
