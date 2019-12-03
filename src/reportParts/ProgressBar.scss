@@ -1,8 +1,12 @@
 @import '../variables';
 
 .progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
-  height: 1rem;
+  height: 1.5rem;
   overflow: hidden; // force rounded corners by cropping it
   font-size: 1rem * .75;
   background-color: #e9ecef;
