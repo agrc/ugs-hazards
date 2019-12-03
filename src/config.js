@@ -1,7 +1,11 @@
 const baseUrl = 'https://services.arcgis.com/ZzrwjTRez6FJiOq4/arcgis/rest/services';
 const supplementalData = `${baseUrl}/Utah_Geologic_Hazards_Supplemental_Data_View/FeatureServer`;
 export default {
-  overviewMapKey: 'overview-map',
+  mapKeys: {
+    overview: 'overview-map',
+    lidar: 'lidar-map',
+    aerials: 'aerials-map'
+  },
   notProd: process.env.REACT_APP_ENVIRONMENT !== 'production',
   urls: {
     baseUrl,

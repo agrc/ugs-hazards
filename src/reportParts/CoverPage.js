@@ -8,7 +8,7 @@ import Loader from './Loader';
 
 export default ({ aoiDescription, aoi, Introduction, Disclaimer }) => {
   const mapContext = useContext(HazardMapContext);
-  const visualAssets = mapContext.visualAssets[config.overviewMapKey];
+  const visualAssets = mapContext.visualAssets[config.mapKeys.overview];
 
   return (
     <div className="cover-page">

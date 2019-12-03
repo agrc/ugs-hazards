@@ -70,8 +70,9 @@ export default props => {
       registerProgressItem(getProgressId(url));
     }
 
-    registerProgressItem(getProgressId(config.overviewMapKey));
-
+    Object.keys(config.mapKeys).forEach(key => {
+      registerProgressItem(getProgressId(config.mapKeys[key]));
+    });
   }, [props.queriesWithResults, registerProgressItem]);
 
   useEffect(() => {
@@ -87,10 +88,16 @@ export default props => {
         newScreenshots[hazardCode] = {mapImage: screenshot.dataUrl, renderer};
       }
 
-      // generate overview map
-      const { screenshot } = await getScreenshot();
-      newScreenshots[config.overviewMapKey] = { mapImage: screenshot.dataUrl };
-      setProgressItemAsComplete(getProgressId(config.overviewMapKey));
+      const getExtraScreenshot = async (key, url) => {
+        // generate overview map
+        const { screenshot } = await getScreenshot(url);
+        newScreenshots[key] = { mapImage: screenshot.dataUrl };
+        setProgressItemAsComplete(getProgressId(key));
+      };
+
+      await getExtraScreenshot(config.mapKeys.overview);
+      await getExtraScreenshot(config.mapKeys.lidar, config.urls.lidarExtents);
+      await getExtraScreenshot(config.mapKeys.aerials, config.urls.aerialImageryCenterpoints);
 
       setVisualAssets(newScreenshots);
     };
@@ -122,7 +129,11 @@ const getScreenshot = async function(url) {
 
   for (let index = 0; index < map.layers.length; index++) {
     const layer = map.layers.getItemAt(index);
-    layer.visible = new RegExp(`${url}$`).test(`${layer.url}/${layer.layerId}`);
+    if (url) {
+      layer.visible = new RegExp(`${url.toUpperCase()}$`).test(`${layer.url}/${layer.layerId}`.toUpperCase());
+    } else {
+      layer.visible = false;
+    }
 
     if (layer.visible) {
       await layer.load();

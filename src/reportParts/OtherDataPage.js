@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import config from '../config';
+import { HazardMapContext } from './HazardMap';
+import Loader from './Loader';
 
 
 export default props => {
+  const mapContext = useContext(HazardMapContext);
+  const visualAssets = mapContext.visualAssets[props.mapKey];
+
   return (
     <div className="page-break">
       <div className="header">
@@ -11,7 +16,8 @@ export default props => {
       </div>
       <p dangerouslySetInnerHTML={{ __html: props.Introduction }}
         title={config.notProd && "OtherDataTable.Introduction"}></p>
-      <div>{"<map>"}</div>
+      { visualAssets ? <img src={visualAssets.mapImage}
+        alt="map" className="hazard-map-image" /> : <Loader /> }
       {props.children}
       <h4>How To Use This Map</h4>
       <p dangerouslySetInnerHTML={{ __html: props.HowToUse }}
