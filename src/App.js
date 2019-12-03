@@ -169,7 +169,7 @@ export default props => {
       </ProgressBar>
       <HazardMap aoi={props.polygon} queriesWithResults={queriesWithResults}>
         <CoverPage aoiDescription={props.description} {...reportTextMap} />
-        <SummaryPage {...reportTextMap} hazardToUnitMap={hazardToUnitMap} />
+        <SummaryPage {...reportTextMap} hazardToUnitMap={hazardToUnitMap} aerialFeatures={aerialFeatures} lidarFeatures={lidarFeatures} />
         {Object.keys(groupToHazardMap).map(groupName => (
           <Group key={groupName} name={groupName} text={groupToTextMap[groupName]}>
             {hazardIntroText && hazardReferences && hazardToUnitMap && groupToHazardMap[groupName].map(hazardCode => {
