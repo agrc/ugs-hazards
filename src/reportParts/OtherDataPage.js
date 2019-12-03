@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import config from '../config';
 import { HazardMapContext } from './HazardMap';
 import Loader from './Loader';
+import './OtherDataPage.scss';
 
 
 export default props => {
@@ -11,8 +12,8 @@ export default props => {
   return (
     <div className="page-break">
       <div className="header">
-        <h1>OTHER DATA</h1>
-        <h2>{props.Data}</h2>
+        <h2 className="group__heading">OTHER DATA</h2>
+        <h2 className="other-data-page__heading">{props.Data}</h2>
       </div>
       <p dangerouslySetInnerHTML={{ __html: props.Introduction }}
         title={config.notProd && "OtherDataTable.Introduction"}></p>
