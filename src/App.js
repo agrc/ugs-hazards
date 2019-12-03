@@ -36,7 +36,7 @@ export default props => {
   const [groupToTextMap, setGroupToTextMap] = useState([]);
   const [reportTextMap, setReportTextMap] = useState({});
   const [otherDataMap, setOtherDataMap] = useState({});
-  const [lidarFeatures, setLidarFeatures] = useState({});
+  const [lidarFeatures, setLidarFeatures] = useState([]);
   const [tasks, setTasks] = useState({});
 
   const registerProgressItem = useCallback(itemId => {
@@ -180,10 +180,9 @@ export default props => {
                 })}
           </Group>
         ))}
-        { lidarFeatures.length > 0 && <OtherDataPage {...otherDataMap['Lidar Elevation Data']}>
+        <OtherDataPage {...otherDataMap['Lidar Elevation Data']} mapLayerUrl={config.urls.lidarExtents}>
           {lidarFeatures.map(feature => <LidarFeature {...feature} />)}
-        </OtherDataPage> }
-        <OtherDataPage {...otherDataMap['Aerial Photography and Imagery']}>
+        </OtherDataPage>
           {"<imagery-specific stuff>"}
         </OtherDataPage>
       </HazardMap>
