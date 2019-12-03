@@ -49,7 +49,7 @@ export const queryHazardUnitTableAsync = units => {
   console.log('QueryService.queryHazardUnitTableAsync');
 
   const where = `HazardUnit IN ('${units.join('\',\'')}')`;
-  const outFields = 'HazardName,HazardUnit,HowToUse,Description';
+  const outFields = 'HazardName,HazardUnit,HowToUse,Description,UnitName';
 
   return queryTable(config.urls.hazardUnitTextTable, where, outFields);
 };

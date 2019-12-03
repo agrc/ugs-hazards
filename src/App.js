@@ -127,14 +127,14 @@ export default props => {
       groupText.forEach(({ HazardGroup, Text }) => groupToTextMapBuilder[HazardGroup] = Text);
 
       const hazardToUnitMapBuilder = {};
-      hazardUnitText.forEach(({ HazardUnit, HazardName, HowToUse, Description }) => {
+      hazardUnitText.forEach(({ HazardUnit, HazardName, HowToUse, Description, UnitName }) => {
         const hazardCode = getHazardCodeFromUnitCode(HazardUnit);
 
         if (!hazardToUnitMapBuilder[hazardCode]) {
           hazardToUnitMapBuilder[hazardCode] = [];
         }
 
-        hazardToUnitMapBuilder[hazardCode].push({ HazardName, HowToUse, Description, HazardUnit });
+        hazardToUnitMapBuilder[hazardCode].push({ HazardName, HowToUse, Description, HazardUnit, UnitName });
       });
 
       const groupToHazardMapBuilder = {}
@@ -169,7 +169,7 @@ export default props => {
       </ProgressBar>
       <HazardMap aoi={props.polygon} queriesWithResults={queriesWithResults}>
         <CoverPage aoiDescription={props.description} {...reportTextMap} />
-        <SummaryPage {...reportTextMap} />
+        <SummaryPage {...reportTextMap} hazardToUnitMap={hazardToUnitMap} />
         {Object.keys(groupToHazardMap).map(groupName => (
           <Group key={groupName} name={groupName} text={groupToTextMap[groupName]}>
             {hazardIntroText && hazardReferences && hazardToUnitMap && groupToHazardMap[groupName].map(hazardCode => {
