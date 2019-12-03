@@ -181,9 +181,10 @@ export default props => {
                 })}
           </Group>
         ))}
-        <OtherDataPage {...otherDataMap['Lidar Elevation Data']} mapLayerUrl={config.urls.lidarExtents}>
+        <OtherDataPage {...otherDataMap['Lidar Elevation Data']} mapKey={config.mapKeys.lidar}>
           {lidarFeatures.map(feature => <LidarFeature {...feature} />)}
         </OtherDataPage>
+        <OtherDataPage {...otherDataMap['Aerial Photography and Imagery']} mapKey={config.mapKeys.aerials}>
           {"<imagery-specific stuff>"}
         </OtherDataPage>
       </HazardMap>
