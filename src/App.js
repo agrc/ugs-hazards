@@ -166,8 +166,7 @@ export default props => {
               const references = hazardReferences.filter(x => x.Hazard === hazardCode);
               const units = hazardToUnitMap[hazardCode];
                   return (
-                    <Hazard name={units[0].HazardName} introText={introText}
-                      key={hazardCode} code={hazardCode}>
+                    <Hazard name={units[0].HazardName} group={groupName} introText={introText} key={hazardCode} code={hazardCode}>
                       { units.map((unit, index) => <HazardUnit key={index} {...unit}/>) }
                       <References references={references.map(({ Text }) => Text)}></References>
                     </Hazard>
