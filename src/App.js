@@ -14,13 +14,15 @@ import {
   queryGroupingAsync,
   queryGroupTextAsync,
   queryReportTextTableAsync,
-  queryOtherDataTableAsync
+  queryOtherDataTableAsync,
+  queryLidarAsync
 } from './services/QueryService';
 import { getHazardCodeFromUnitCode } from './helpers';
 import CoverPage from './reportParts/CoverPage';
 import SummaryPage from './reportParts/SummaryPage';
 import OtherDataPage from './reportParts/OtherDataPage';
 import ProgressBar from './reportParts/ProgressBar';
+import LidarFeature from './reportParts/LidarFeature';
 
 
 export const ProgressContext = createContext();
@@ -34,6 +36,7 @@ export default props => {
   const [groupToTextMap, setGroupToTextMap] = useState([]);
   const [reportTextMap, setReportTextMap] = useState({});
   const [otherDataMap, setOtherDataMap] = useState({});
+  const [lidarFeatures, setLidarFeatures] = useState({});
   const [tasks, setTasks] = useState({});
 
   const registerProgressItem = useCallback(itemId => {
@@ -87,14 +90,16 @@ export default props => {
         hazardUnitText,
         hazardReferences,
         reportTextRows,
-        otherDataRows
+        otherDataRows,
+        lidarFeatures,
       ] = await Promise.all([
         queryGroupingAsync(flatUnitCodes),
         queryIntroTextAsync(flatUnitCodes),
         queryHazardUnitTableAsync(flatUnitCodes),
         queryReferenceTableAsync(flatUnitCodes),
         queryReportTextTableAsync(),
-        queryOtherDataTableAsync()
+        queryOtherDataTableAsync(),
+        queryLidarAsync(props.polygon)
       ]);
       setProgressItemAsComplete(relatedTablesProgressId);
 
@@ -141,6 +146,7 @@ export default props => {
       setHazardIntroText(hazardIntroText);
       setHazardReferences(hazardReferences);
       setGroupToTextMap(groupToTextMapBuilder);
+      setLidarFeatures(lidarFeatures);
     };
 
     if (props.polygon) {
@@ -175,9 +181,9 @@ export default props => {
                 })}
           </Group>
         ))}
-        <OtherDataPage {...otherDataMap['Lidar Elevation Data']}>
-          {"<lidar-specific stuff>"}
-        </OtherDataPage>
+        { lidarFeatures.length > 0 && <OtherDataPage {...otherDataMap['Lidar Elevation Data']}>
+          {lidarFeatures.map(feature => <LidarFeature {...feature} />)}
+        </OtherDataPage> }
         <OtherDataPage {...otherDataMap['Aerial Photography and Imagery']}>
           {"<imagery-specific stuff>"}
         </OtherDataPage>

@@ -1,4 +1,5 @@
 const baseUrl = 'https://services.arcgis.com/ZzrwjTRez6FJiOq4/arcgis/rest/services';
+const supplementalData = `${baseUrl}/Utah_Geologic_Hazards_Supplemental_Data_View/FeatureServer`;
 export default {
   overviewMapKey: 'overview-map',
   notProd: process.env.REACT_APP_ENVIRONMENT !== 'production',
@@ -10,7 +11,9 @@ export default {
     hazardReferenceTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/3`,
     hazardUnitTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/4`,
     otherDataTable: `${baseUrl}/Report_Tables_View/FeatureServer/7`,
-    reportTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/8`
+    reportTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/8`,
+    lidarExtents: `${supplementalData}/2`,
+    aerialImageryCenterpoints: `${supplementalData}/3`
   },
   queries: [
     ['Utah_Geologic_Hazards/FeatureServer/0', 'FLH'], // Flood Hazard

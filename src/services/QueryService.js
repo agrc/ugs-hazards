@@ -110,3 +110,18 @@ export const queryOtherDataTableAsync = () => {
 
   return queryTable(config.urls.otherDataTable, where, outFields);
 };
+
+export const queryLidarAsync = async aoi => {
+  const parameters = {
+    geometryType: 'esriGeometryPolygon',
+    geometry: JSON.stringify(aoi),
+    returnGeometry: false,
+    outFields: ['ProjectName', 'AreaName', 'DataAccessURL'],
+    f: 'json'
+  };
+
+  const response = await fetch(`${config.urls.lidarExtents}/query?${stringify(parameters)}`);
+  const responseJson = await response.json();
+
+  return responseJson.features.map(feature => feature.attributes);
+};
