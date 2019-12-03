@@ -1,10 +1,12 @@
+@import '../variables';
+
 .summary-page {
   &__table {
     width: 100%;
     border-collapse: collapse;
 
     th, td {
-      border: 1px solid #666;
+      border: 1px solid $gray;
       padding: .25em;
     }
 
@@ -17,7 +19,7 @@
     }
 
     &--bordered {
-      border: 1px solid #666;
+      border: 1px solid $gray;
     }
   }
 }
