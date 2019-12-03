@@ -15,7 +15,8 @@ import {
   queryGroupTextAsync,
   queryReportTextTableAsync,
   queryOtherDataTableAsync,
-  queryLidarAsync
+  queryLidarAsync,
+  queryAerialAsync
 } from './services/QueryService';
 import { getHazardCodeFromUnitCode } from './helpers';
 import CoverPage from './reportParts/CoverPage';
@@ -23,6 +24,7 @@ import SummaryPage from './reportParts/SummaryPage';
 import OtherDataPage from './reportParts/OtherDataPage';
 import ProgressBar from './reportParts/ProgressBar';
 import LidarFeature from './reportParts/LidarFeature';
+import AerialFeature from './reportParts/AerialFeature';
 
 
 export const ProgressContext = createContext();
@@ -37,6 +39,7 @@ export default props => {
   const [reportTextMap, setReportTextMap] = useState({});
   const [otherDataMap, setOtherDataMap] = useState({});
   const [lidarFeatures, setLidarFeatures] = useState([]);
+  const [aerialFeatures, setAerialFeatures] = useState([]);
   const [tasks, setTasks] = useState({});
 
   const registerProgressItem = useCallback(itemId => {
@@ -92,6 +95,7 @@ export default props => {
         reportTextRows,
         otherDataRows,
         lidarFeatures,
+        aerialFeatures
       ] = await Promise.all([
         queryGroupingAsync(flatUnitCodes),
         queryIntroTextAsync(flatUnitCodes),
@@ -99,7 +103,8 @@ export default props => {
         queryReferenceTableAsync(flatUnitCodes),
         queryReportTextTableAsync(),
         queryOtherDataTableAsync(),
-        queryLidarAsync(props.polygon)
+        queryLidarAsync(props.polygon),
+        queryAerialAsync(props.polygon)
       ]);
       setProgressItemAsComplete(relatedTablesProgressId);
 
@@ -147,6 +152,7 @@ export default props => {
       setHazardReferences(hazardReferences);
       setGroupToTextMap(groupToTextMapBuilder);
       setLidarFeatures(lidarFeatures);
+      setAerialFeatures(aerialFeatures);
     };
 
     if (props.polygon) {
@@ -185,7 +191,7 @@ export default props => {
           {lidarFeatures.map(feature => <LidarFeature {...feature} />)}
         </OtherDataPage>
         <OtherDataPage {...otherDataMap['Aerial Photography and Imagery']} mapKey={config.mapKeys.aerials}>
-          {"<imagery-specific stuff>"}
+          {aerialFeatures.map(feature => <AerialFeature {...feature} />)}
         </OtherDataPage>
       </HazardMap>
       <div className="header page-break">

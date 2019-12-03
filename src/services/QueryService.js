@@ -125,3 +125,33 @@ export const queryLidarAsync = async aoi => {
 
   return responseJson.features.map(feature => feature.attributes);
 };
+
+export const queryAerialAsync = async aoi => {
+  const parameters = {
+    geometryType: 'esriGeometryPolygon',
+    geometry: JSON.stringify(aoi),
+    returnGeometry: false,
+    outFields: ['Agency', 'ProjectYear', 'ProjectCode', 'ProjectName', 'Roll', 'Frame'],
+    f: 'json',
+    orderByFields: 'Agency ASC, ProjectYear DESC, ProjectCode ASC'
+  };
+
+  const response = await fetch(`${config.urls.aerialImageryCenterpoints}/query?${stringify(parameters)}`);
+  const responseJson = await response.json();
+  const features =  responseJson.features.map(feature => feature.attributes);
+
+  // mix in agency descriptions from related table
+  const agenciesWhere = `Agency IN ('${features.map(feature => feature.Agency).join(',')}')`;
+  const tableResults = await queryTable(config.urls.imageAgenciesTable, agenciesWhere, ['Agency', 'Description']);
+  const descriptionsLookup = {};
+  tableResults.forEach(result => {
+    descriptionsLookup[result.attributes.Agency] = result.attributes.Description;
+  });
+
+  return features.map(feature => {
+    return {
+      ...feature,
+      Description: descriptionsLookup[feature.Agency]
+    }
+  });
+};
