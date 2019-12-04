@@ -1,6 +1,7 @@
 import React from 'react';
 import config from '../config';
 import './SummaryPage.scss';
+import { kebabCase } from 'lodash';
 
 
 export default props => {
@@ -26,9 +27,9 @@ export default props => {
           </tr>
         </thead>
         <tbody>
-          { hazardUnits.map(unit =>
-            <tr>
-              <td>{unit.HazardName}</td>
+          { hazardUnits.map((unit, index) =>
+            <tr key={index}>
+              <td><a className="print--as-text" href={`#${kebabCase(unit.HazardName)}`}>{unit.HazardName}</a></td>
               <td>{unit.UnitName}</td>
             </tr>
           )}

@@ -6,6 +6,7 @@
   "dependencies": {
     "classnames": "^2.2.6",
     "esri-loader": "^2.12.0",
+    "lodash": "4.17.15",
     "node-sass": "^4.13.0",
     "query-string": "^6.9.0",
     "react": "^16.12.0",
