@@ -49,12 +49,12 @@ export default props => {
         <tbody>
           { props.lidarFeatures.length > 0 &&
             <tr>
-              <td>Lidar Elevation Data (high-resolution ground topography)</td>
+              <td><a className="print--as-text" href="#lidar">Lidar Elevation Data (high-resolution ground topography)</a></td>
             </tr>
           }
           { props.aerialFeatures.length > 0 &&
             <tr>
-              <td>Aerial Photography and Imagery</td>
+              <td><a className="print--as-text" href="#aerial-photography">Aerial Photography and Imagery</a></td>
             </tr>
           }
           { props.aerialFeatures.length < 1 && props.lidarFeatures.length < 1 &&

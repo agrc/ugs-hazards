@@ -190,10 +190,10 @@ export default props => {
                 })}
           </Group>
         ))}
-        <OtherDataPage {...otherDataMap['Lidar Elevation Data']} mapKey={config.mapKeys.lidar}>
+        <OtherDataPage {...otherDataMap['Lidar Elevation Data']} mapKey={config.mapKeys.lidar} id="lidar">
           {lidarFeatures.map((feature, index) => <LidarFeature key={index} {...feature} />)}
         </OtherDataPage>
-        <OtherDataPage {...otherDataMap['Aerial Photography and Imagery']} mapKey={config.mapKeys.aerials}>
+        <OtherDataPage {...otherDataMap['Aerial Photography and Imagery']} mapKey={config.mapKeys.aerials} id="aerial-photography">
           {aerialFeatures.map((feature, index) => <AerialFeature key={index} {...feature} />)}
         </OtherDataPage>
       </HazardMap>

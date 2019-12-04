@@ -10,7 +10,7 @@ export default props => {
   const visualAssets = mapContext.visualAssets[props.mapKey];
 
   return (
-    <div className="page-break">
+    <div className="page-break" id={props.id}>
       <div className="header">
         <h2 className="group__heading">OTHER DATA</h2>
         <h2 className="other-data-page__heading">{props.Data}</h2>
