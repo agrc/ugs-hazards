@@ -7,9 +7,12 @@ import { kebabCase } from 'lodash';
 export default props => {
   console.log('SummaryPage.render', props);
 
-  const hazardUnits = Object.keys(props.hazardToUnitMap).reduce((previous, current) => {
-    return previous.concat(props.hazardToUnitMap[current]);
-  }, []);
+  let hazardUnits = [];
+  Object.values(props.groupToHazardMap).forEach(hazardCodes => {
+    hazardCodes.forEach(code => {
+      hazardUnits = hazardUnits.concat(props.hazardToUnitMap[code]);
+    })
+  });
 
   return (
     <div className="page-break summary-page">
