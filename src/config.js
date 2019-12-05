@@ -45,6 +45,7 @@ export default {
     // ['Utah_Earthquake_Hazards/FeatureServer/2', '??'], // quaternary faults
     ['Utah_Earthquake_Hazards/FeatureServer/3', 'LQS'], // Liquefaction Susceptibility
     ['Utah_Earthquake_Hazards/FeatureServer/4', 'SFR'], // Surface Fault Rupture Hazard Special Study Zone
+    ['Utah_Earthquake_Hazards/FeatureServer/6', 'EGS'] // Groundshaking Polygons
   ],
   webMaps: {
     hazard: (process.env.REACT_APP_ENVIRONMENT === 'dev') ?
