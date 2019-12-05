@@ -28,6 +28,7 @@ import AerialFeature from './reportParts/AerialFeature';
 
 
 export const ProgressContext = createContext();
+console.log(`using web map: ${config.webMaps.hazard}`);
 
 export default props => {
   const [groupToHazardMap, setGroupToHazardMap] = useState({});
