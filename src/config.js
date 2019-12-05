@@ -47,10 +47,10 @@ export default {
     ['Utah_Earthquake_Hazards/FeatureServer/4', 'SFR'], // Surface Fault Rupture Hazard Special Study Zone
   ],
   webMaps: {
-    hazard: (process.env.REACT_APP_ENVIRONMENT === 'production') ?
-      // production & staging
-      '<to be created by gordon>' :
+    hazard: (process.env.REACT_APP_ENVIRONMENT === 'dev') ?
       // development
-      '895afaac7ee04933b91ee9dd1f88c823'
+      '75f96478838e4cc8a5360ff55304520b' :
+      // production & staging
+      'a2d16377b4b5495ab2aaca8dd14463ba'
   }
 };
