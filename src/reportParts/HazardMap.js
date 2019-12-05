@@ -97,7 +97,7 @@ export default props => {
 
       await getExtraScreenshot(config.mapKeys.overview);
       await getExtraScreenshot(config.mapKeys.lidar, config.urls.lidarExtents);
-      await getExtraScreenshot(config.mapKeys.aerials, config.urls.aerialImageryCenterpoints);
+      await getExtraScreenshot(config.mapKeys.aerials, config.urls.aerialImageryCenterPoints);
 
       setVisualAssets(newScreenshots);
     };

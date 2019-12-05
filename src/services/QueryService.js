@@ -42,14 +42,13 @@ export const queryUnitsAsync = async (meta, aoi) => {
     f: 'json'
   };
 
-  const response = await fetch(`${config.urls.baseUrl}/${url}/query?${stringify(parameters)}`);
-  const responseJson = await response.json();
-
-  return {
-    units: responseJson.features.map(feature => feature.attributes[hazardField]),
-    hazard,
-    url
-  };
+  return await retryPolicy(`${config.urls.baseUrl}/${url}/query?${stringify(parameters)}`, (responseJson) => {
+    return {
+      units: responseJson.features.map(feature => feature.attributes[hazardField]),
+        hazard,
+        url
+    };
+  });
 };
 
 const getDistinctHazardCodesFromUnits = units => {
@@ -63,10 +62,7 @@ const queryTable = async (url, where, outFields) => {
     f: 'json'
   };
 
-  const response = await fetch(`${url}/query?${stringify(parameters)}`);
-  const responseJson = await response.json();
-
-  return responseJson.features.map(feature => feature.attributes);
+  return await retryPolicy(`${url}/query?${stringify(parameters)}`, (responseJson) => responseJson.features.map(feature => feature.attributes));
 };
 
 export const queryHazardUnitTableAsync = units => {
@@ -144,10 +140,8 @@ export const queryLidarAsync = async aoi => {
     f: 'json'
   };
 
-  const response = await fetch(`${config.urls.lidarExtents}/query?${stringify(parameters)}`);
-  const responseJson = await response.json();
-
-  return responseJson.features.map(feature => feature.attributes);
+  return await retryPolicy(`${config.urls.lidarExtents}/query?${stringify(parameters)}`,
+    (responseJson) => responseJson.features.map(feature => feature.attributes));
 };
 
 export const queryAerialAsync = async aoi => {
@@ -160,9 +154,8 @@ export const queryAerialAsync = async aoi => {
     orderByFields: 'Agency ASC, ProjectYear DESC, ProjectCode ASC'
   };
 
-  const response = await fetch(`${config.urls.aerialImageryCenterpoints}/query?${stringify(parameters)}`);
-  const responseJson = await response.json();
-  const features =  responseJson.features.map(feature => feature.attributes);
+  const features = await retryPolicy(`${config.urls.aerialImageryCenterPoints}/query?${stringify(parameters)}`,
+    (responseJson) => responseJson.features.map(feature => feature.attributes));
 
   // mix in agency descriptions from related table
   const agenciesWhere = `Agency IN ('${features.map(feature => feature.Agency).join(',')}')`;
