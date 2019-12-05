@@ -18,7 +18,7 @@ export default {
     otherDataTable: `${baseUrl}/Report_Tables_View/FeatureServer/7`,
     reportTextTable: `${baseUrl}/Report_Tables_View/FeatureServer/8`,
     lidarExtents: `${supplementalData}/2`,
-    aerialImageryCenterpoints: `${supplementalData}/3`
+    aerialImageryCenterPoints: `${supplementalData}/3`
   },
   queries: [
     ['Utah_Geologic_Hazards/FeatureServer/0', 'FLH'], // Flood Hazard
