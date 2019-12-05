@@ -200,8 +200,8 @@ export default props => {
       </HazardMap>
       <div className="header page-break">
         <h1>OTHER GEOLOGIC HAZARD RESOURCES</h1>
-        <p dangerouslySetInnerHTML={{__html: reportTextMap.OtherResources}}
-          title={config.notProd && 'ReportTextTable.Text(OtherResources)'}></p>
+        <p dangerouslySetInnerHTML={{__html: reportTextMap.OtherGeologicHazardResources}}
+          title={config.notProd && 'ReportTextTable.Text(OtherGeologicHazardResources)'}></p>
       </div>
     </ProgressContext.Provider>
   </>);
