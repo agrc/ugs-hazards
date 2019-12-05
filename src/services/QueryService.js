@@ -1,7 +1,31 @@
 import config from '../config';
 import { stringify } from 'query-string';
 import { getHazardCodeFromUnitCode } from '../helpers';
+import polly from 'polly-js';
 
+const retryPolicy = (url, outputFormatter) => {
+  return polly().waitAndRetry(3).executeForPromise(async () => {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return Promise.reject({
+        ...response,
+        requestURL: url
+      });
+    }
+
+    const responseJson = await response.json();
+
+    if (responseJson.error) {
+      return Promise.reject({
+        ...responseJson,
+        requestURL: url
+      });
+    }
+
+    return outputFormatter(responseJson);
+  });
+}
 
 export const queryUnitsAsync = async (meta, aoi) => {
   console.log('QueryService.queryUnitsAsync');
