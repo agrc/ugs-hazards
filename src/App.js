@@ -25,6 +25,7 @@ import OtherDataPage from './reportParts/OtherDataPage';
 import ProgressBar from './reportParts/ProgressBar';
 import LidarFeature from './reportParts/LidarFeature';
 import AerialFeature from './reportParts/AerialFeature';
+import ErrorPage from './reportParts/ErrorPage';
 
 
 export const ProgressContext = createContext();
@@ -42,6 +43,7 @@ export default props => {
   const [lidarFeatures, setLidarFeatures] = useState([]);
   const [aerialFeatures, setAerialFeatures] = useState([]);
   const [tasks, setTasks] = useState({});
+  const [pageError, setError] = useState(false);
 
   const registerProgressItem = useCallback(itemId => {
     setTasks(previousTasks => {
@@ -157,11 +159,14 @@ export default props => {
     };
 
     if (props.polygon) {
-      getData();
+      getData().then(null, (error) => {
+        console.warn(error);
+        setError(error);
+      });
     }
   }, [props.polygon, registerProgressItem, setProgressItemAsComplete]);
 
-  return (<>
+  return (!pageError ? <>
     <ProgressContext.Provider value={{ registerProgressItem, setProgressItemAsComplete }}>
       <ProgressBar className="print--hide" tasks={tasks}>
         <div className="print-button">
@@ -203,6 +208,6 @@ export default props => {
         <p dangerouslySetInnerHTML={{__html: reportTextMap.OtherGeologicHazardResources}}
           title={config.notProd && 'ReportTextTable.Text(OtherGeologicHazardResources)'}></p>
       </div>
-    </ProgressContext.Provider>
-  </>);
+      </ProgressContext.Provider>
+  </> : <ErrorPage error={pageError} />);
 };
