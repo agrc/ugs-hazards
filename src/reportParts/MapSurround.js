@@ -2,11 +2,13 @@ import React, { useRef, useContext, useEffect } from 'react';
 import getModules from '../esriModules';
 import { HazardMapContext } from './HazardMap';
 import './MapSurround.scss';
+import Loader from './Loader';
 
 
-export default ({ mapImage }) => {
+export default ({ mapKey }) => {
   const scaleBarRef = useRef();
-  const { mapView } = useContext(HazardMapContext);
+  const { mapView, visualAssets } = useContext(HazardMapContext);
+  const mapImage = visualAssets && visualAssets[mapKey] && visualAssets[mapKey].mapImage;
 
   useEffect(() => {
     const setUpScaleBar = async () => {
@@ -26,13 +28,17 @@ export default ({ mapImage }) => {
     }
   }, [mapImage, mapView]);
 
-  return (
-    <>
-      <img src={mapImage} alt="map" className="hazard__image" />
-      <div className="map-surround__parts">
-        <div ref={scaleBarRef}></div>
-        <div className="map-surround__scale-text">Scale 1:{Math.round(mapView.scale).toLocaleString()}</div>
-      </div>
-    </>
-  );
+  if (mapImage) {
+    return (
+      <>
+        <img src={mapImage} alt="map" className="map-surround__image" />
+        <div className="map-surround__parts">
+          <div ref={scaleBarRef}></div>
+          <div className="map-surround__scale-text">Scale 1:{Math.round(mapView.scale).toLocaleString()}</div>
+        </div>
+      </>
+    );
+  }
+
+  return (<Loader />);
 };

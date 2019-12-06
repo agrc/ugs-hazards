@@ -1,15 +1,7 @@
-@import '../variables';
-$borderWidth: 2px;
-
 .hazard {
   &__heading {
     text-align: center;
     margin-top: -1em;
     font-size: 1.3rem;
-  }
-  &__image {
-    width: calc(100% - #{$borderWidth} * 2);
-    min-height: 200px;
-    border: $borderWidth solid $gray;
   }
 }
