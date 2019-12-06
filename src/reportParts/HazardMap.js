@@ -2,11 +2,11 @@ import React, { useContext, useState, useEffect, createContext } from 'react';
 import config from '../config';
 import getModules from '../esriModules';
 import { ProgressContext } from '../App';
-import './HazardMap.scss';
 
 
 export const HazardMapContext = createContext({
-  visualAssets: {}
+  visualAssets: {},
+  mapView: null
 });
 
 // we tried moving these to useRef but the code silently failed at map.current.when()
@@ -18,6 +18,7 @@ export default props => {
   const [ mapLoading, setMapLoading ] = useState(false);
   const [ mapLoaded, setMapLoaded ] = useState(false);
   const { registerProgressItem, setProgressItemAsComplete } = useContext(ProgressContext);
+  const [ mapView, setMapView ] = useState();
 
   const createMap = async () => {
     console.log('HazardMap.createMap');
@@ -60,6 +61,8 @@ export default props => {
     view.graphics.add(polylineGraphic);
 
     setMapLoaded(true);
+
+    setMapView(view);
   }
 
   const getProgressId = url => `screenshot-${url}`;
@@ -113,7 +116,7 @@ export default props => {
 
   return (
     <>
-      <HazardMapContext.Provider value={{ visualAssets }}>
+      <HazardMapContext.Provider value={{ visualAssets, mapView }}>
         {props.children}
       </HazardMapContext.Provider>
     </>

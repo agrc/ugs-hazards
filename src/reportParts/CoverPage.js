@@ -4,6 +4,7 @@ import config from '../config';
 import './CoverPage.scss';
 import { HazardMapContext } from './HazardMap';
 import Loader from './Loader';
+import MapSurround from './MapSurround';
 
 
 export default ({ aoiDescription, aoi, Introduction, Disclaimer }) => {
@@ -20,8 +21,7 @@ export default ({ aoiDescription, aoi, Introduction, Disclaimer }) => {
       </div>
       <p dangerouslySetInnerHTML={{ __html: Introduction }}
         title={config.notProd && 'ReportTextTable.Text(Introduction)'}></p>
-      { visualAssets ? <img src={visualAssets.mapImage}
-        alt="map" className="hazard-map-image" /> : <Loader /> }
+      { visualAssets ? <MapSurround mapImage={visualAssets.mapImage} /> : <Loader /> }
       <p dangerouslySetInnerHTML={{ __html: Disclaimer }}
         title={config.notProd && 'ReportTextTable.Text(Disclaimer)'}></p>
     </div>

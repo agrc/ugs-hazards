@@ -18,7 +18,7 @@ export default props => {
       <p dangerouslySetInnerHTML={{ __html: props.Introduction }}
         title={config.notProd && "OtherDataTable.Introduction"}></p>
       { visualAssets ? <img src={visualAssets.mapImage}
-        alt="map" className="hazard-map-image" /> : <Loader /> }
+        alt="map" className="hazard__image" /> : <Loader /> }
       {props.children}
       <h4>How To Use This Map</h4>
       <p dangerouslySetInnerHTML={{ __html: props.HowToUse }}
