@@ -32,7 +32,7 @@ export default props => {
 
     const polylineSymbol = {
       type: 'simple-line',
-      color: [226, 119, 40],
+      color: '#f012be',
       width: 4
     };
 
