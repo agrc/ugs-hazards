@@ -1,6 +1,12 @@
 .map-surround {
   &__parts {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+  }
+  &__scale-text {
+    /* copied from Esri ScaleBar widget label */
+    font-family: "Avenir Next W00","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 600;
+    font-size: 12px;
   }
 }

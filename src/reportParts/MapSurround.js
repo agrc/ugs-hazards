@@ -31,7 +31,7 @@ export default ({ mapImage }) => {
       <img src={mapImage} alt="map" className="hazard__image" />
       <div className="map-surround__parts">
         <div ref={scaleBarRef}></div>
-        <div>Scale 1:{Math.round(mapView.scale).toLocaleString()}</div>
+        <div className="map-surround__scale-text">Scale 1:{Math.round(mapView.scale).toLocaleString()}</div>
       </div>
     </>
   );
