@@ -147,7 +147,7 @@ const getScreenshot = async function(url) {
 
   await watchUtils.whenFalseOnce(view, 'updating');
 
-  const screenshot = await view.takeScreenshot({width: 2000, height: 1000});
+  const screenshot = await view.takeScreenshot({width: 2550, height: 1576});
 
   return {screenshot, renderer};
 };
