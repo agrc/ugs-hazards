@@ -15,8 +15,7 @@ export default ({ mapImage }) => {
       new ScaleBar({
         view: mapView,
         container: scaleBarRef.current,
-        // unit: 'dual'
-        style: 'ruler'
+        unit: 'dual'
       });
     }
 
