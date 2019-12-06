@@ -8,7 +8,8 @@ export default async () => {
     'esri/geometry/Polygon',
     'esri/Graphic',
     'esri/core/watchUtils',
-    'esri/symbols/support/symbolUtils'
+    'esri/symbols/support/symbolUtils',
+    'esri/widgets/ScaleBar'
   ];
 
   const [
@@ -17,13 +18,14 @@ export default async () => {
     Polygon,
     Graphic,
     watchUtils,
-    symbolUtils
+    symbolUtils,
+    ScaleBar
   ] = await loadModules(requires, {
     version: '4.13',
     css: true
   });
 
   return {
-    WebMap, MapView, Polygon, Graphic, watchUtils, symbolUtils
+    WebMap, MapView, Polygon, Graphic, watchUtils, symbolUtils, ScaleBar
   };
 };
