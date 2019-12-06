@@ -3,6 +3,7 @@ import config from '../config';
 import { HazardMapContext } from './HazardMap';
 import Loader from './Loader';
 import './OtherDataPage.scss';
+import MapSurround from './MapSurround';
 
 
 export default props => {
@@ -17,8 +18,7 @@ export default props => {
       </div>
       <p dangerouslySetInnerHTML={{ __html: props.Introduction }}
         title={config.notProd && "OtherDataTable.Introduction"}></p>
-      { visualAssets ? <img src={visualAssets.mapImage}
-        alt="map" className="hazard__image" /> : <Loader /> }
+      { visualAssets ? <MapSurround mapImage={visualAssets.mapImage} /> : <Loader /> }
       {props.children}
       <h4>How To Use This Map</h4>
       <p dangerouslySetInnerHTML={{ __html: props.HowToUse }}
