@@ -1,4 +1,5 @@
 @import '../variables';
+$borderWidth: 2px;
 
 .hazard {
   &__heading {
@@ -7,8 +8,8 @@
     font-size: 1.3rem;
   }
   &__image {
-    width: 100%;
+    width: calc(100% - #{$borderWidth} * 2);
     min-height: 200px;
-    border: 2px solid $gray;
+    border: $borderWidth solid $gray;
   }
 }
