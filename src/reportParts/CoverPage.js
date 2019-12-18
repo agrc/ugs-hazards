@@ -5,6 +5,7 @@ import './CoverPage.scss';
 import MapSurround from './MapSurround';
 
 
+const date = new Date();
 export default ({ aoiDescription, aoi, Introduction, Disclaimer }) => {
   return (
     <div className="cover-page">
@@ -19,6 +20,7 @@ export default ({ aoiDescription, aoi, Introduction, Disclaimer }) => {
       <MapSurround mapKey={config.mapKeys.overview} />
       <p dangerouslySetInnerHTML={{ __html: Disclaimer }}
         title={config.notProd && 'ReportTextTable.Text(Disclaimer)'}></p>
+      <p dangerouslySetInnerHTML={{ __html: `Report generated on ${date.toLocaleDateString()} at ${date.toLocaleTimeString()}.`}}></p>
     </div>
   );
 };
