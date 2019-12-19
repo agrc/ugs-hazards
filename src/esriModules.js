@@ -21,7 +21,7 @@ export default async () => {
     symbolUtils,
     ScaleBar
   ] = await loadModules(requires, {
-    version: '4.13',
+    version: '4.14',
     css: true
   });
 
