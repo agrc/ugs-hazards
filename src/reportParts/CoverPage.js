@@ -14,13 +14,13 @@ export default ({ aoiDescription, aoi, Introduction, Disclaimer }) => {
         <img src={ugsLogo} alt="dnr logo" className="logo" />
         <h3>GEOLOGIC HAZARDS MAPPING AND DATA CUSTOM REPORT</h3>
         <h3 title={config.notProd && 'from "description" property of input data'}>for {aoiDescription}</h3>
+        <p dangerouslySetInnerHTML={{ __html: `Report generated on ${date.toLocaleDateString()} at ${date.toLocaleTimeString()}`}}></p>
       </div>
       <p dangerouslySetInnerHTML={{ __html: Introduction }}
         title={config.notProd && 'ReportTextTable.Text(Introduction)'}></p>
       <MapSurround mapKey={config.mapKeys.overview} />
       <p dangerouslySetInnerHTML={{ __html: Disclaimer }}
         title={config.notProd && 'ReportTextTable.Text(Disclaimer)'}></p>
-      <p dangerouslySetInnerHTML={{ __html: `Report generated on ${date.toLocaleDateString()} at ${date.toLocaleTimeString()}.`}}></p>
     </div>
   );
 };
