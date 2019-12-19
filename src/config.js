@@ -6,6 +6,7 @@ export default {
     lidar: 'lidar-map',
     aerials: 'aerials-map'
   },
+  scaleMultiple: 2500,
   notProd: process.env.REACT_APP_ENVIRONMENT !== 'production',
   urls: {
     baseUrl,

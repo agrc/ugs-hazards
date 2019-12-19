@@ -55,10 +55,17 @@ export default props => {
       ui: {
         components: ['attribution']
       },
-      extent: polygon.extent.expand(3)
+      extent: polygon.extent.expand(3),
+      graphics: [ polylineGraphic ],
+      constraints: {
+        snapToZoom: false
+      }
     });
 
-    view.graphics.add(polylineGraphic);
+    // make map scale a multiple of 2500
+    await view.when();
+    const remainder = view.scale % config.scaleMultiple;
+    view.scale = view.scale + config.scaleMultiple - remainder;
 
     setMapLoaded(true);
 
