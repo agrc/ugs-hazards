@@ -1,5 +1,6 @@
 const baseUrl = 'https://services.arcgis.com/ZzrwjTRez6FJiOq4/arcgis/rest/services';
 const supplementalData = `${baseUrl}/Utah_Geologic_Hazards_Supplemental_Data_View/FeatureServer`;
+const groundshakingHazardCode = 'EGS';
 export default {
   mapKeys: {
     overview: 'overview-map',
@@ -21,6 +22,7 @@ export default {
     lidarExtents: `${supplementalData}/2`,
     aerialImageryCenterPoints: `${supplementalData}/3`
   },
+  groundshakingHazardCode,
   queries: [
     ['Utah_Geologic_Hazards/FeatureServer/0', 'FLH'], // Flood Hazard
     ['Utah_Geologic_Hazards/FeatureServer/1', 'SGS'], // Shallow Groundwater Susceptibility
@@ -45,7 +47,7 @@ export default {
     ['Utah_Earthquake_Hazards/FeatureServer/2', 'QFF'], // Quaternary Faults
     ['Utah_Earthquake_Hazards/FeatureServer/3', 'LQS'], // Liquefaction Susceptibility
     ['Utah_Earthquake_Hazards/FeatureServer/4', 'SFR'], // Surface Fault Rupture Hazard Special Study Zone
-    ['Utah_Earthquake_Hazards/FeatureServer/6', 'EGS'] // Groundshaking Polygons
+    ['Utah_Earthquake_Hazards/FeatureServer/6', groundshakingHazardCode] // Groundshaking Polygons
   ],
   webMaps: {
     hazard: (process.env.REACT_APP_ENVIRONMENT === 'dev') ?

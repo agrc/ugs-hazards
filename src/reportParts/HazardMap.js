@@ -5,27 +5,27 @@ import { ProgressContext } from '../App';
 
 
 export const HazardMapContext = createContext({
-  visualAssets: {},
-  mapView: null
+  visualAssets: {}
 });
 
 // we tried moving these to useRef but the code silently failed at map.current.when()
 let map;
 let view;
+let scaleBar;
+
 export default props => {
   console.log('HazardMap.render', props);
   const [ visualAssets, setVisualAssets ] = useState({});
   const [ mapLoading, setMapLoading ] = useState(false);
   const [ mapLoaded, setMapLoaded ] = useState(false);
   const { registerProgressItem, setProgressItemAsComplete } = useContext(ProgressContext);
-  const [ mapView, setMapView ] = useState();
 
   const createMap = async () => {
     console.log('HazardMap.createMap');
 
     setMapLoading(true);
 
-    const { WebMap, MapView, Polygon, Graphic } = await getModules();
+    const { WebMap, MapView, Polygon, Graphic, ScaleBar } = await getModules();
 
     const mapDiv = document.createElement('div');
     mapDiv.style = 'position: absolute; left: -5000px; width: 1000px; height: 500px';
@@ -65,11 +65,15 @@ export default props => {
     // make map scale a multiple of 2500
     await view.when();
     const remainder = view.scale % config.scaleMultiple;
-    view.scale = view.scale + config.scaleMultiple - remainder;
+    view.scale += config.scaleMultiple - remainder;
+
+    scaleBar = new ScaleBar({
+      view,
+      container: document.createElement('div'),
+      unit: 'dual'
+    });
 
     setMapLoaded(true);
-
-    setMapView(view);
   }
 
   const getProgressId = url => `screenshot-${url}`;
@@ -92,16 +96,21 @@ export default props => {
       const newScreenshots = {};
       for (let index = 0; index < props.queriesWithResults.length; index++) {
         const [url, hazardCode] = props.queriesWithResults[index];
-        const { screenshot, renderer } = await getScreenshot(url);
+        const { screenshot, renderer, scale, scaleBarDom } = await getScreenshot(url, hazardCode);
         setProgressItemAsComplete(getProgressId(url));
 
-        newScreenshots[hazardCode] = {mapImage: screenshot.dataUrl, renderer};
+        newScreenshots[hazardCode] = {
+          mapImage: screenshot.dataUrl,
+          renderer,
+          scale,
+          scaleBarDom
+        };
       }
 
       const getExtraScreenshot = async (key, url) => {
         // generate overview map
-        const { screenshot } = await getScreenshot(url);
-        newScreenshots[key] = { mapImage: screenshot.dataUrl };
+        const { screenshot, scale, scaleBarDom } = await getScreenshot(url);
+        newScreenshots[key] = { mapImage: screenshot.dataUrl, scale, scaleBarDom };
         setProgressItemAsComplete(getProgressId(key));
       };
 
@@ -123,14 +132,14 @@ export default props => {
 
   return (
     <>
-      <HazardMapContext.Provider value={{ visualAssets, mapView }}>
+      <HazardMapContext.Provider value={{ visualAssets }}>
         {props.children}
       </HazardMapContext.Provider>
     </>
   );
 };
 
-const getScreenshot = async function(url) {
+const getScreenshot = async function(url, hazardCode) {
   console.log('HazardMap.getScreenshot', url);
 
   let renderer;
@@ -152,12 +161,31 @@ const getScreenshot = async function(url) {
     };
   }
 
-  await view.when();
   const { watchUtils } = await getModules();
+
+  let originalScale;
+  if (hazardCode === config.groundshakingHazardCode) {
+    originalScale = view.scale;
+
+    // goTo works better than setting the scale prop directly since we can await it
+    await view.goTo({
+      scale: view.scale * 2
+    });
+  }
 
   await watchUtils.whenFalseOnce(view, 'updating');
 
   const screenshot = await view.takeScreenshot({width: 2550, height: 1576});
+  // cache scale bar dom since it could be different for different maps
+  const scaleBarDom = scaleBar.container.cloneNode(true);
+  const scale = view.scale;
 
-  return {screenshot, renderer};
+  if (originalScale) {
+    await view.goTo({
+      scale: originalScale
+    });
+  }
+
+  console.log('view.scale', scale, hazardCode);
+  return { screenshot, renderer, scale, scaleBarDom };
 };
