@@ -1,5 +1,4 @@
 import React, { useRef, useContext, useEffect } from 'react';
-import getModules from '../esriModules';
 import { HazardMapContext } from './HazardMap';
 import './MapSurround.scss';
 import Loader from './Loader';
@@ -7,26 +6,16 @@ import Loader from './Loader';
 
 export default ({ mapKey }) => {
   const scaleBarRef = useRef();
-  const { mapView, visualAssets } = useContext(HazardMapContext);
+  const { visualAssets } = useContext(HazardMapContext);
   const mapImage = visualAssets && visualAssets[mapKey] && visualAssets[mapKey].mapImage;
+  const scale = (mapImage) ? visualAssets[mapKey].scale : 0;
+  const scaleBarDom = (mapImage) ? visualAssets[mapKey].scaleBarDom : null;
 
   useEffect(() => {
-    const setUpScaleBar = async () => {
-      const { ScaleBar } = await getModules();
-
-      new ScaleBar({
-        view: mapView,
-        container: scaleBarRef.current,
-        unit: 'dual'
-      });
+    if (scaleBarDom) {
+      scaleBarRef.current.appendChild(scaleBarDom);
     }
-
-    // get map view from context
-    // require and set up the widget
-    if (mapImage) {
-      setUpScaleBar();
-    }
-  }, [mapImage, mapView]);
+  }, [ scaleBarDom ]);
 
   if (mapImage) {
     return (
@@ -34,7 +23,7 @@ export default ({ mapKey }) => {
         <img src={mapImage} alt="map" className="map-surround__image" />
         <div className="map-surround__parts">
           <div ref={scaleBarRef}></div>
-          <div className="map-surround__scale-text">Scale 1:{Math.round(mapView.scale).toLocaleString()}</div>
+          <div className="map-surround__scale-text">Scale 1:{Math.round(scale).toLocaleString()}</div>
         </div>
       </>
     );
