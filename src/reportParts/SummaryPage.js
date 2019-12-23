@@ -32,7 +32,7 @@ export default props => {
         <tbody>
           { hazardUnits.map((unit, index) =>
             <tr key={index}>
-              <td><a className="print--as-text" href={`#${kebabCase(unit.HazardName)}`}>{unit.HazardName}</a></td>
+              <td><a href={`#${kebabCase(unit.HazardName)}`}>{unit.HazardName}</a></td>
               <td>{unit.UnitName}</td>
             </tr>
           )}
@@ -49,12 +49,12 @@ export default props => {
         <tbody>
           { props.lidarFeatures.length > 0 &&
             <tr>
-              <td><a className="print--as-text" href="#lidar">Lidar Elevation Data (high-resolution ground topography)</a></td>
+              <td><a href="#lidar">Lidar Elevation Data (high-resolution ground topography)</a></td>
             </tr>
           }
           { props.aerialFeatures.length > 0 &&
             <tr>
-              <td><a className="print--as-text" href="#aerial-photography">Aerial Photography and Imagery</a></td>
+              <td><a href="#aerial-photography">Aerial Photography and Imagery</a></td>
             </tr>
           }
           { props.aerialFeatures.length < 1 && props.lidarFeatures.length < 1 &&
