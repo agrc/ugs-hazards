@@ -156,9 +156,10 @@ export const queryAerialAsync = async aoi => {
 
   const features = await retryPolicy(`${config.urls.aerialImageryCenterPoints}/query?${stringify(parameters)}`,
     (responseJson) => responseJson.features.map(feature => feature.attributes));
+  const agencies = Array.from(new Set(features.map(feature => feature.Agency)));
 
   // mix in agency descriptions from related table
-  const agenciesWhere = `Agency IN ('${features.map(feature => feature.Agency).join(',')}')`;
+  const agenciesWhere = `Agency IN ('${agencies.join(',')}')`;
   const tableResults = await queryTable(config.urls.imageAgenciesTable, agenciesWhere, ['Agency', 'Description']);
   const descriptionsLookup = {};
   tableResults.forEach(result => {
