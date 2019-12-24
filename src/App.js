@@ -173,40 +173,42 @@ export default props => {
           <button onClick={window.print}>Print Report</button>
         </div>
       </ProgressBar>
-      <HazardMap aoi={props.polygon} queriesWithResults={queriesWithResults}>
-        <CoverPage aoiDescription={props.description} {...reportTextMap} />
-        <SummaryPage {...reportTextMap}
-          hazardToUnitMap={hazardToUnitMap}
-          aerialFeatures={aerialFeatures}
-          lidarFeatures={lidarFeatures}
-          groupToHazardMap={groupToHazardMap} />
-        {Object.keys(groupToHazardMap).map(groupName => (
-          <Group key={groupName} name={groupName} text={groupToTextMap[groupName]}>
-            {hazardIntroText && hazardReferences && hazardToUnitMap && groupToHazardMap[groupName].map(hazardCode => {
-              const intro = hazardIntroText.filter(x => x.Hazard === hazardCode)[0];
-              const introText = (intro) ? intro.Text : null;
-              const references = hazardReferences.filter(x => x.Hazard === hazardCode);
-              const units = hazardToUnitMap[hazardCode];
-                  return (
-                    <Hazard name={units[0].HazardName} group={groupName} introText={introText} key={hazardCode} code={hazardCode}>
-                      { units.map((unit, index) => <HazardUnit key={index} {...unit}/>) }
-                      <References references={references.map(({ Text }) => Text)}></References>
-                    </Hazard>
-                  )
-                })}
-          </Group>
-        ))}
-        <OtherDataPage {...otherDataMap['Lidar Elevation Data']} mapKey={config.mapKeys.lidar} id="lidar">
-          {lidarFeatures.map((feature, index) => <LidarFeature key={index} {...feature} />)}
-        </OtherDataPage>
-        <OtherDataPage {...otherDataMap['Aerial Photography and Imagery']} mapKey={config.mapKeys.aerials} id="aerial-photography">
-          {aerialFeatures.map((feature, index) => <AerialFeature key={index} {...feature} />)}
-        </OtherDataPage>
-      </HazardMap>
-      <div className="header page-break">
-        <h1>OTHER GEOLOGIC HAZARD RESOURCES</h1>
-        <p dangerouslySetInnerHTML={{__html: reportTextMap.OtherGeologicHazardResources}}
-          title={config.notProd && 'ReportTextTable.Text(OtherGeologicHazardResources)'}></p>
+      <div className="app--container">
+        <HazardMap aoi={props.polygon} queriesWithResults={queriesWithResults}>
+          <CoverPage aoiDescription={props.description} {...reportTextMap} />
+          <SummaryPage {...reportTextMap}
+            hazardToUnitMap={hazardToUnitMap}
+            aerialFeatures={aerialFeatures}
+            lidarFeatures={lidarFeatures}
+            groupToHazardMap={groupToHazardMap} />
+          {Object.keys(groupToHazardMap).map(groupName => (
+            <Group key={groupName} name={groupName} text={groupToTextMap[groupName]}>
+              {hazardIntroText && hazardReferences && hazardToUnitMap && groupToHazardMap[groupName].map(hazardCode => {
+                const intro = hazardIntroText.filter(x => x.Hazard === hazardCode)[0];
+                const introText = (intro) ? intro.Text : null;
+                const references = hazardReferences.filter(x => x.Hazard === hazardCode);
+                const units = hazardToUnitMap[hazardCode];
+                    return (
+                      <Hazard name={units[0].HazardName} group={groupName} introText={introText} key={hazardCode} code={hazardCode}>
+                        { units.map((unit, index) => <HazardUnit key={index} {...unit}/>) }
+                        <References references={references.map(({ Text }) => Text)}></References>
+                      </Hazard>
+                    )
+                  })}
+            </Group>
+          ))}
+          <OtherDataPage {...otherDataMap['Lidar Elevation Data']} mapKey={config.mapKeys.lidar} id="lidar">
+            {lidarFeatures.map((feature, index) => <LidarFeature key={index} {...feature} />)}
+          </OtherDataPage>
+          <OtherDataPage {...otherDataMap['Aerial Photography and Imagery']} mapKey={config.mapKeys.aerials} id="aerial-photography">
+            {aerialFeatures.map((feature, index) => <AerialFeature key={index} {...feature} />)}
+          </OtherDataPage>
+        </HazardMap>
+        <div className="header page-break">
+          <h1>OTHER GEOLOGIC HAZARD RESOURCES</h1>
+          <p dangerouslySetInnerHTML={{__html: reportTextMap.OtherGeologicHazardResources}}
+            title={config.notProd && 'ReportTextTable.Text(OtherGeologicHazardResources)'}></p>
+        </div>
       </div>
       </ProgressContext.Provider>
   </> : <ErrorPage error={pageError} />);
