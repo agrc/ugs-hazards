@@ -18,7 +18,7 @@ export default props => {
       const { symbolUtils } = await getModules();
       let renderers = [];
 
-      if (renderer.type === 'unique-value') {
+      if (renderer.type === 'unique-value' || renderer.type === 'uniqueValue') {
         renderers = renderer.uniqueValueInfos.filter(info => info.value === props.HazardUnit);
       }
 
@@ -37,7 +37,7 @@ export default props => {
 
     console.log('mapContext', mapContext);
     const assets = mapContext.visualAssets[getHazardCodeFromUnitCode(props.HazardUnit)];
-    if (!hasLegend && assets) {
+    if (!hasLegend && assets && assets.renderer) {
       buildLegend(assets.renderer);
     }
   }, [hasLegend, props.HazardUnit, mapContext]);
