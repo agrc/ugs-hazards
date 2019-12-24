@@ -14,8 +14,8 @@ $borderWidth: 2px;
     font-size: 12px;
   }
   &__image {
-    width: calc(100% - #{$borderWidth} * 2);
-    min-height: 200px;
+    width: $mapScreenWidth;
+    height: $mapScreenHeight;
     border: $borderWidth solid $gray;
   }
 }

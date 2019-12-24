@@ -3,6 +3,7 @@ import config from '../config';
 import getModules from '../esriModules';
 import { ProgressContext } from '../App';
 import { getLayerInfo } from '../services/QueryService';
+import './HazardMap.scss';
 
 
 export const HazardMapContext = createContext({
@@ -29,7 +30,6 @@ export default props => {
     const { WebMap, MapView, Polygon, Graphic, ScaleBar } = await getModules();
 
     const mapDiv = document.createElement('div');
-    mapDiv.style = 'position: absolute; left: -5000px; width: 1000px; height: 500px';
     document.body.appendChild(mapDiv);
 
     const polylineSymbol = {
@@ -196,7 +196,9 @@ const getScreenshot = async function(url, hazardCode) {
 
   await watchUtils.whenFalseOnce(view, 'updating');
 
-  const screenshot = await view.takeScreenshot({width: 2550, height: 1576});
+  // map width is 8.5" - 0.78" (default print margins for Chrome on macOS) * 300 dpi
+  // height is golden ratio
+  const screenshot = await view.takeScreenshot({width: 2316, height: 1431});
   // cache scale bar dom since it could be different for different maps
   const scaleBarDom = scaleBar.container.cloneNode(true);
   const scale = view.scale;
