@@ -173,7 +173,7 @@ export default props => {
           <button onClick={window.print}>Print Report</button>
         </div>
       </ProgressBar>
-      <div className="app--container">
+      <div className="app__container">
         <HazardMap aoi={props.polygon} queriesWithResults={queriesWithResults}>
           <CoverPage aoiDescription={props.description} {...reportTextMap} />
           <SummaryPage {...reportTextMap}
