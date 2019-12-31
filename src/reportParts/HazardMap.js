@@ -200,6 +200,7 @@ const getScreenshot = async function(url, hazardCode) {
   // height is golden ratio
   const screenshot = await view.takeScreenshot({width: 2316, height: 1431});
   // cache scale bar dom since it could be different for different maps
+  scaleBar.renderNow();
   const scaleBarDom = scaleBar.container.cloneNode(true);
   const scale = view.scale;
 
