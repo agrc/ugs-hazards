@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect, createContext } from 'react';
 import config from '../config';
 import getModules from '../esriModules';
 import { ProgressContext } from '../App';
-import { getLayerInfo } from '../services/QueryService';
 import './HazardMap.scss';
 
 
@@ -148,37 +147,17 @@ const getScreenshot = async function(url, hazardCode) {
   await map.when();
 
   for (let index = 0; index < map.layers.length; index++) {
-    let layer = map.layers.getItemAt(index);
-    let testUrl;
-    let loadLayer;
-    if (layer.type === 'map-image') {
-      layer = layer.sublayers.items[0];
-      testUrl = layer.url;
-      loadLayer = layer.parent;
-    } else {
-      testUrl = `${layer.url}/${layer.layerId}`;
-      loadLayer = layer;
-    }
-
+    const layer = map.layers.getItemAt(index);
     if (url) {
-      layer.visible = new RegExp(`${url.toUpperCase()}$`).test(testUrl.toUpperCase());
+      layer.visible = new RegExp(`${url.toUpperCase()}$`).test(`${layer.url.toUpperCase()}/${layer.layerId}`.toUpperCase());
     } else {
       layer.visible = false;
     }
 
     if (layer.visible) {
-      await loadLayer.load();
+      await layer.load();
 
-      if (layer.parent) {
-        layer.parent.visible = layer.visible;
-      }
-
-      if (layer.renderer) {
-        renderer = layer.renderer;
-      } else {
-        const info = await getLayerInfo(layer.url);
-        renderer = info.drawingInfo.renderer;
-      }
+      renderer = layer.renderer;
     };
   }
 
@@ -210,6 +189,6 @@ const getScreenshot = async function(url, hazardCode) {
     });
   }
 
-  console.log('view.scale', scale, hazardCode);
+  console.log('view.scale', scale, hazardCode, renderer);
   return { screenshot, renderer, scale, scaleBarDom };
 };

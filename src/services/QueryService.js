@@ -3,7 +3,7 @@ import { stringify } from 'query-string';
 import { getHazardCodeFromUnitCode } from '../helpers';
 import polly from 'polly-js';
 
-const retryPolicy = (url, outputFormatter=response => response) => {
+const retryPolicy = (url, outputFormatter) => {
   return polly().waitAndRetry(3).executeForPromise(async () => {
     const response = await fetch(url);
 
@@ -30,11 +30,7 @@ const retryPolicy = (url, outputFormatter=response => response) => {
 export const queryUnitsAsync = async (meta, aoi) => {
   console.log('QueryService.queryUnitsAsync');
 
-  let [url, hazard] = meta;
-
-  if (!url.startsWith('https')) {
-    url = `${config.urls.baseUrl}/${url}`;
-  }
+  const [url, hazard] = meta;
 
   const hazardField = `${hazard}HazardUnit`;
 
@@ -46,7 +42,7 @@ export const queryUnitsAsync = async (meta, aoi) => {
     f: 'json'
   };
 
-  return await retryPolicy(`${url}/query?${stringify(parameters)}`, (responseJson) => {
+  return await retryPolicy(`${config.urls.baseUrl}/${url}/query?${stringify(parameters)}`, (responseJson) => {
     return {
       units: responseJson.features.map(feature => feature.attributes[hazardField]),
         hazard,
@@ -176,10 +172,4 @@ export const queryAerialAsync = async aoi => {
       Description: descriptionsLookup[feature.Agency]
     }
   });
-};
-
-export const getLayerInfo = async url => {
-  const info = await retryPolicy(`${url}?f=json`);
-
-  return info;
 };
