@@ -44,6 +44,7 @@ export default props => {
   const [aerialFeatures, setAerialFeatures] = useState([]);
   const [tasks, setTasks] = useState({});
   const [pageError, setError] = useState(false);
+  const [unitToFeatureLookups, setUnitToFeatureLookups] = useState({});
 
   const registerProgressItem = useCallback(itemId => {
     setTasks(previousTasks => {
@@ -88,6 +89,9 @@ export default props => {
       const hazardInfos = allHazardInfos.filter(({ units }) => units.length > 0);
       const flatUnitCodes = Array.from(new Set(hazardInfos.reduce((previous, { units }) => previous.concat(units), [])));
       setQueriesWithResults(hazardInfos.map(info => [info.url, info.hazard]));
+      const unitToFeatureLookupsBuilder = {};
+      allHazardInfos.forEach(({ hazard, unitToFeatureLookup }) => unitToFeatureLookupsBuilder[hazard] = unitToFeatureLookup);
+      setUnitToFeatureLookups(unitToFeatureLookupsBuilder);
 
       // these queries can be done simultaneously
       const [
@@ -190,7 +194,7 @@ export default props => {
                 const units = hazardToUnitMap[hazardCode];
                     return (
                       <Hazard name={units[0].HazardName} group={groupName} introText={introText} key={hazardCode} code={hazardCode}>
-                        { units.map((unit, index) => <HazardUnit key={index} {...unit}/>) }
+                        { units.map((unit, index) => <HazardUnit key={index} {...unit} attributes={unitToFeatureLookups[hazardCode][unit.HazardUnit]} />) }
                         <References references={references.map(({ Text }) => Text)}></References>
                       </Hazard>
                     )
