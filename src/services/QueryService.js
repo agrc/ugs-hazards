@@ -38,15 +38,24 @@ export const queryUnitsAsync = async (meta, aoi) => {
     geometryType: 'esriGeometryPolygon',
     geometry: JSON.stringify(aoi),
     returnGeometry: false,
-    outFields: hazardField,
+    outFields: '*',
     f: 'json'
   };
-
   return await retryPolicy(`${config.urls.baseUrl}/${url}/query?${stringify(parameters)}`, (responseJson) => {
+    const unitToFeatureLookup = {};
+
+    const units = responseJson.features.map(feature => {
+      const unit = feature.attributes[hazardField];
+      unitToFeatureLookup[unit] = feature.attributes;
+
+      return unit;
+    });
+
     return {
-      units: responseJson.features.map(feature => feature.attributes[hazardField]),
-        hazard,
-        url
+      unitToFeatureLookup,
+      units,
+      hazard,
+      url,
     };
   });
 };
