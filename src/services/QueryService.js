@@ -59,11 +59,12 @@ const getDistinctHazardCodesFromUnits = units => {
   return units.map(unit => getHazardCodeFromUnitCode(unit));
 }
 
-const queryTable = async (url, where, outFields) => {
+const queryTable = async (url, where, outFields, orderByFields) => {
   const parameters = {
     where,
     outFields,
-    f: 'json'
+    f: 'json',
+    orderByFields
   };
 
   return await retryPolicy(`${url}/query?${stringify(parameters)}`, (responseJson) => responseJson.features.map(feature => feature.attributes));
@@ -114,7 +115,9 @@ export const queryGroupTextAsync = groups => {
   const where = `HazardGroup IN ('${groups.join('\',\'')}')`;
   const outFields = 'HazardGroup,Text';
 
-  return queryTable(config.urls.hazardGroupTextTable, where, outFields);
+  // Sort this data according to how you want it to show up in the report.
+  // This does not affect the "OtherResources" group which is always at the bottom.
+  return queryTable(config.urls.hazardGroupTextTable, where, outFields, 'OBJECTID ASC');
 };
 
 export const queryReportTextTableAsync = () => {

@@ -127,7 +127,13 @@ export default props => {
       const groupText = await queryGroupTextAsync(flatGroups);
 
       const groupToTextMapBuilder = {};
-      groupText.forEach(({ HazardGroup, Text }) => groupToTextMapBuilder[HazardGroup] = Text);
+      const groupToHazardMapBuilder = {};
+      groupText.forEach(({ HazardGroup, Text }) => {
+        groupToTextMapBuilder[HazardGroup] = Text;
+
+        // build this object here so that the order is correct for when we use it in the jsx below
+        groupToHazardMapBuilder[HazardGroup] = [];
+      });
 
       const hazardToUnitMapBuilder = {};
       hazardUnitText.forEach(({ HazardUnit, HazardName, HowToUse, Description, UnitName }) => {
@@ -140,14 +146,7 @@ export default props => {
         hazardToUnitMapBuilder[hazardCode].push({ HazardName, HowToUse, Description, HazardUnit, UnitName });
       });
 
-      const groupToHazardMapBuilder = {}
-      groupings.forEach(({ HazardCode, HazardGroup }) => {
-        if (!groupToHazardMapBuilder[HazardGroup]) {
-          groupToHazardMapBuilder[HazardGroup] = [];
-        }
-
-        groupToHazardMapBuilder[HazardGroup].push(HazardCode);
-      });
+      groupings.forEach(({ HazardCode, HazardGroup }) => groupToHazardMapBuilder[HazardGroup].push(HazardCode));
 
       setHazardToUnitMap(hazardToUnitMapBuilder);
       setGroupToHazardMap(groupToHazardMapBuilder);
