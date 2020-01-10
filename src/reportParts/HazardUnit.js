@@ -37,7 +37,7 @@ export default props => {
 
     console.log('mapContext', mapContext);
     const assets = mapContext.visualAssets[getHazardCodeFromUnitCode(props.HazardUnit)];
-    if (!hasLegend && assets) {
+    if (!hasLegend && assets && assets.renderer) {
       buildLegend(assets.renderer);
     }
   }, [hasLegend, props.HazardUnit, mapContext]);

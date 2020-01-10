@@ -147,17 +147,32 @@ const getScreenshot = async function(url, hazardCode) {
   await map.when();
 
   for (let index = 0; index < map.layers.length; index++) {
-    const layer = map.layers.getItemAt(index);
+    let layer = map.layers.getItemAt(index);
+    let testUrl;
+    let loadLayer;
+    if (layer.type === 'map-image') {
+      layer = layer.sublayers.items[0];
+      testUrl = layer.url;
+      loadLayer = layer.parent;
+    } else {
+      testUrl = `${layer.url}/${layer.layerId}`;
+      loadLayer = layer;
+    }
+
     if (url) {
-      layer.visible = new RegExp(`${url.toUpperCase()}$`).test(`${layer.url.toUpperCase()}/${layer.layerId}`.toUpperCase());
+      layer.visible = new RegExp(`${url.toUpperCase()}$`).test(testUrl.toUpperCase());
     } else {
       layer.visible = false;
     }
 
     if (layer.visible) {
-      await layer.load();
+      await loadLayer.load();
 
       renderer = layer.renderer;
+
+      if (layer.parent) {
+        layer.parent.visible = layer.visible;
+      }
     };
   }
 
