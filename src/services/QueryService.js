@@ -3,7 +3,7 @@ import { stringify } from 'query-string';
 import { getHazardCodeFromUnitCode } from '../helpers';
 import polly from 'polly-js';
 
-const retryPolicy = (url, outputFormatter) => {
+const retryPolicy = (url, outputFormatter=response => response) => {
   return polly().waitAndRetry(3).executeForPromise(async () => {
     const response = await fetch(url);
 
@@ -30,7 +30,11 @@ const retryPolicy = (url, outputFormatter) => {
 export const queryUnitsAsync = async (meta, aoi) => {
   console.log('QueryService.queryUnitsAsync');
 
-  const [url, hazard] = meta;
+  let [url, hazard] = meta
+
+  if (!url.startsWith('https')) {
+    url = `${config.urls.baseUrl}/${url}`;
+  }
 
   const hazardField = `${hazard}HazardUnit`;
 
@@ -42,7 +46,7 @@ export const queryUnitsAsync = async (meta, aoi) => {
     f: 'json'
   };
 
-  return await retryPolicy(`${config.urls.baseUrl}/${url}/query?${stringify(parameters)}`, (responseJson) => {
+  return await retryPolicy(`${url}/query?${stringify(parameters)}`, (responseJson) => {
     return {
       units: responseJson.features.map(feature => feature.attributes[hazardField]),
         hazard,
