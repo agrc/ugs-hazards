@@ -19,17 +19,7 @@ export default props => {
       let renderers = [];
 
       if (renderer.type === 'unique-value') {
-        let featureValue;
-        [renderer.field, renderer.field2, renderer.field3].forEach(fieldName => {
-          if (fieldName) {
-            if (!featureValue) {
-              featureValue = props.attributes[fieldName];
-            } else {
-              featureValue += `;${props.attributes[fieldName]}`;
-            }
-          }
-        });
-        renderers = renderer.uniqueValueInfos.filter(info => info.value === featureValue);
+        renderers = renderer.uniqueValueInfos.filter(info => info.value === props.HazardUnit);
       }
 
       if (renderers.length !== 1) {
@@ -47,10 +37,10 @@ export default props => {
 
     console.log('mapContext', mapContext);
     const assets = mapContext.visualAssets[getHazardCodeFromUnitCode(props.HazardUnit)];
-    if (!hasLegend && assets && props.attributes) {
+    if (!hasLegend && assets) {
       buildLegend(assets.renderer);
     }
-  }, [hasLegend, props.HazardUnit, mapContext, props.attributes]);
+  }, [hasLegend, props.HazardUnit, mapContext]);
 
   return (
     <div className="unit">
