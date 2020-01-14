@@ -117,7 +117,7 @@ export const queryGroupTextAsync = groups => {
 
   // Sort this data according to how you want it to show up in the report.
   // This does not affect the "OtherResources" group which is always at the bottom.
-  return queryTable(config.urls.hazardGroupTextTable, where, outFields, 'OBJECTID ASC');
+  return queryTable(config.urls.hazardGroupTextTable, where, outFields, 'Order_ ASC');
 };
 
 export const queryReportTextTableAsync = () => {
