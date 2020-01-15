@@ -47,9 +47,9 @@ export default {
     ['Utah_Geologic_Hazards/FeatureServer/18', 'SLS'], // Soluble Soil and Rock Susceptibility
     ['Utah_Geologic_Hazards/FeatureServer/19', 'WSS'], // Wind-Blown Sand Susceptibility
     ['https://webmaps.geology.utah.gov/arcgis/rest/services/Hazards/quaternary_faults/MapServer/0', quaternaryFaultsHazardCode], // Quaternary Faults
-    ['Utah_Earthquake_Hazards/FeatureServer/3', 'LQS'], // Liquefaction Susceptibility
-    ['Utah_Earthquake_Hazards/FeatureServer/4', 'SFR'], // Surface Fault Rupture Hazard Special Study Zone
-    ['Utah_Earthquake_Hazards/FeatureServer/6', groundshakingHazardCode] // Groundshaking Polygons
+    ['Utah_Earthquake_Hazards/FeatureServer/2', 'LQS'], // Liquefaction Susceptibility
+    ['Utah_Earthquake_Hazards/FeatureServer/3', 'SFR'], // Surface Fault Rupture Hazard Special Study Zone
+    ['Utah_Earthquake_Hazards/FeatureServer/5', groundshakingHazardCode] // Groundshaking Polygons
   ],
   webMaps: {
     hazard: (process.env.REACT_APP_ENVIRONMENT === 'dev') ?
