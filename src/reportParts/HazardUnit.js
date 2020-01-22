@@ -15,6 +15,9 @@ export default props => {
   useEffect(() => {
     const buildLegend = async renderer => {
       console.log('buildLegend', renderer);
+
+      setHasLegend(true);
+
       const { symbolUtils } = await getModules();
       let renderers = [];
 
@@ -31,16 +34,14 @@ export default props => {
       await symbolUtils.renderPreviewHTML(symbol, {
         node: legend.current
       });
-
-      setHasLegend(true);
     };
 
-    console.log('mapContext', mapContext);
     const assets = mapContext.visualAssets[getHazardCodeFromUnitCode(props.HazardUnit)];
     if (!hasLegend && assets && assets.renderer) {
       buildLegend(assets.renderer);
     }
-  }, [hasLegend, props.HazardUnit, mapContext]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapContext]);
 
   return (
     <div className="unit">
