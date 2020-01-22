@@ -3,6 +3,7 @@
 #root {
   font-size: 11pt;
   display: flex;
+  flex_wrap: wrap;
   flex-direction: column;
   align-items: center;
 }
