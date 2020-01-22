@@ -54,7 +54,7 @@ export default {
   webMaps: {
     hazard: (process.env.REACT_APP_ENVIRONMENT === 'dev') ?
       // development
-      '5c4f8b50c9da4813bf0645d0d8db25c4' :
+      'eec57827136a472dbdb75535889d74b2' :
       // production & staging
       'a2d16377b4b5495ab2aaca8dd14463ba'
   }
